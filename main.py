@@ -4,7 +4,7 @@ import sys
 
 pygame.init()
 clock = pygame.time.Clock()
-size = width, height = 800, 600
+size = width, height = 1920, 1080
 screen = pygame.display.set_mode(size)
 
 
@@ -22,7 +22,6 @@ def load_image(name):
 
 
 image = load_image("startmenu.png")
-image1 = pygame.transform.scale(image, (800, 600))
 
 
 def start_menu():
@@ -31,10 +30,11 @@ def start_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.pos.x in range(?, ?) and event.pos.y in range(?, ?):
+            elif event.type == pygame.MOUSEBUTTONDOWN and int(event.pos[0]) in range(17, 434) and \
+                    int(event.pos[1]) in range(344, 480):
                 pass
         screen.fill('black')
-        screen.blit(image1, (0, 0))
+        screen.blit(image, (0, 0))
         pygame.display.flip()
         clock.tick(60)
 
@@ -42,3 +42,4 @@ def start_menu():
 start_menu()
 
 pygame.quit()
+
