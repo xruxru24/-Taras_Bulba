@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+from InfinityMode import infinity_game
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -32,7 +33,7 @@ def start_menu():
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN and int(event.pos[0]) in range(17, 434) and \
                     int(event.pos[1]) in range(344, 480):
-                pass
+                infinity_game()
         screen.fill('black')
         screen.blit(image, (0, 0))
         pygame.display.flip()
