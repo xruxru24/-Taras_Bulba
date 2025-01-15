@@ -53,7 +53,6 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         player.x_speed -= player.acceleration
