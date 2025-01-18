@@ -46,36 +46,38 @@ class Player(pygame.sprite.Sprite):
         self.max_speed = 2
         self.friction = 0.9
 
+    def run(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    terminate()
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                self.x_speed -= self.acceleration
+            if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                self.x_speed += self.acceleration
+            if keys[pygame.K_UP] or keys[pygame.K_w]:
+                self.y_speed -= self.acceleration
+            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+                self.y_speed += self.acceleration
+
+            self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
+            self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
+
+            if not (keys[pygame.K_LEFT] or keys[pygame.K_a] or keys[pygame.K_RIGHT] or keys[pygame.K_d]):
+                self.x_speed *= self.friction
+            if not (keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_DOWN] or keys[pygame.K_s]):
+                self.y_speed *= self.friction
+
+            self.rect.x += self.x_speed
+            self.rect.y += self.y_speed
+            self.rect.clamp_ip(screen.get_rect())
+
+            screen.fill('white')
+            player_group.draw(screen)
+            pygame.display.flip()
+            clock.tick(FPS)
+
 
 player = Player(50, 50)
-
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            terminate()
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        player.x_speed -= player.acceleration
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        player.x_speed += player.acceleration
-    if keys[pygame.K_UP] or keys[pygame.K_w]:
-        player.y_speed -= player.acceleration
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        player.y_speed += player.acceleration
-
-    player.x_speed = max(-player.max_speed, min(player.x_speed, player.max_speed))
-    player.y_speed = max(-player.max_speed, min(player.y_speed, player.max_speed))
-
-    if not (keys[pygame.K_LEFT] or keys[pygame.K_a] or keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-        player.x_speed *= player.friction
-    if not (keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_DOWN] or keys[pygame.K_s]):
-        player.y_speed *= player.friction
-
-    player.rect.x += player.x_speed
-    player.rect.y += player.y_speed
-    player.rect.clamp_ip(screen.get_rect())
-
-    screen.fill('white')
-    player_group.draw(screen)
-    pygame.display.flip()
-    clock.tick(FPS)
+player.run()
