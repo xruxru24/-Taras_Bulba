@@ -77,6 +77,7 @@ def exit_game():
 
 
 image = load_image("startmenu.png")
+eng = Engine()
 
 
 def start_menu():
@@ -89,13 +90,14 @@ def start_menu():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                click_data = {(range(15, 435), range(345, 480)): infinity_game,
+                click_data = {(range(15, 435), range(345, 480)): (infinity_game, eng.music('1.mp3')),
                               (range(1650, 1920), range(895, 1025)): exit_game,
                               (range(15, 435), range(175, 315)): company_game,
                               (range(15, 435), range(525, 655)): statictics}
                 for i in click_data.keys():
                     if event.pos[0] in i[0] and event.pos[1] in i[1]:
-                        click_data[i]()
+                        for j in range(len(i)):
+                            click_data[i][j]()
         screen.fill('black')
         screen.blit(image, (0, 0))
         pygame.display.flip()
