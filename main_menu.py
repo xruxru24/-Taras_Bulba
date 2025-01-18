@@ -19,7 +19,7 @@ def load_image(name):
 
 
 class Engine:
-    def draw_map_and_units(self, all_sprites):
+    def draw_units(self, all_sprites):
         for unit in all_sprites:
             if isinstance(unit, Player):
                 self.pos_data_player = {}
