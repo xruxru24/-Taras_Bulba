@@ -19,13 +19,18 @@ def load_image(name):
 
 
 class Engine:
+    def __init__(self):
+        self.kills = 0
+        self.damage = 0
+
     def draw_units(self, all_sprites):
         for unit in all_sprites:
             if isinstance(unit, Player):
                 self.pos_data_player = {}
+                image = self.pos_data_player[(unit.dir, unit.weapon)]
             elif isinstance(unit, SwordMan):
                 self.pos_data_swordman = {}
-            image = self.pos_data_player[(unit.pos, unit.weapon)]
+                image = self.pos_data_swordman[(unit.pos, unit.weapon)]
             image = load_image(image)
             screen.blit(image, unit.coords)
 
@@ -34,6 +39,25 @@ class Engine:
         pygame.mixer.music.load(song)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
+
+    def damage_collides(self, weapon, dir, who, all_sprites):
+        data_player_dir = {'up': (0, -weapon.raduis), 'down': (0, weapon.raduis),
+                           'left': (-weapon.raduis, 0), 'right': (weapon.raduis, 0)}
+        divs = data_player_dir[dir]
+        hitbox_weapon = pygame.Rect(who.coords[0] + divs[0], who.coords[1] + divs[1], weapon.raduis, weapon.raduis)
+        for unit in all_sprites:
+            if hitbox_weapon.colliderect(unit.rect):
+                if unit.health - weapon.damage <= 0:
+                    unit.health = 0
+                    all_sprites.pop(unit)
+                    if isinstance(unit, Player):
+                        end_game()
+                    else:
+                        self.kills += 1
+                        self.damage += unit.health
+                else:
+                    unit.health -= weapon.damage
+                    self.damage += weapon.damage
 
 
 def infinity_game():
@@ -68,12 +92,17 @@ def infinity_game():
 def company_game():
     pass
 
+
 def statictics():
     pass
 
 
 def exit_game():
     sys.exit()
+
+
+def end_game():
+    pass
 
 
 image = load_image("startmenu.png")
