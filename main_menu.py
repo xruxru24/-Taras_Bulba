@@ -1,56 +1,39 @@
+import random
+
 import pygame
 import os
 import sys
+import Units
+import InfinityMode
+import expansion
+from expansion import SCREEN
 
-# from InfinityMode import infinity_game
-
-pygame.init()
-clock = pygame.time.Clock()
-size = width, height = 1920, 1080
-screen = pygame.display.set_mode(size)
-
-
-def load_image(name):
-    fullname = os.path.join('data', name)
-    if not os.path.isfile(fullname):
-        sys.exit()
-    image = pygame.image.load(fullname)
-    return image
-
+pygame.mixer.init()
 
 class Engine:
     def __init__(self):
         self.kills = 0
         self.damage = 0
 
-    def draw_units(self, all_sprites):
-        for unit in all_sprites:
-            if isinstance(unit, Player):
-                self.pos_data_player = {}
-                image = self.pos_data_player[(unit.dir, unit.weapon)]
-            elif isinstance(unit, SwordMan):
-                self.pos_data_swordman = {}
-                image = self.pos_data_swordman[(unit.pos, unit.weapon)]
-            image = load_image(image)
-            screen.blit(image, unit.coords)
-
-    def music(self, song):
-        pygame.mixer.init()
-        pygame.mixer.music.load(song)
+    def music(self, songs):
+        for i in songs:
+            pygame.mixer.music.load(i)
+            pygame.mixer.music.queue(i)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.set_volume(1)
 
-    def damage_collides(self, weapon, dir, who, all_sprites):
+
+    def damage_collides(self, weapon, dir, who, creeps):
         data_player_dir = {'up': (0, -weapon.raduis), 'down': (0, weapon.raduis),
                            'left': (-weapon.raduis, 0), 'right': (weapon.raduis, 0)}
         divs = data_player_dir[dir]
         hitbox_weapon = pygame.Rect(who.coords[0] + divs[0], who.coords[1] + divs[1], weapon.raduis, weapon.raduis)
-        for unit in all_sprites:
+        for unit in creeps:
             if hitbox_weapon.colliderect(unit.rect):
                 if unit.health - weapon.damage <= 0:
                     unit.health = 0
-                    all_sprites.pop(unit)
-                    if isinstance(unit, Player):
+                    creeps.pop(unit)
+                    if isinstance(unit, Units.Player):
                         end_game()
                     else:
                         self.kills += 1
@@ -58,35 +41,6 @@ class Engine:
                 else:
                     unit.health -= weapon.damage
                     self.damage += weapon.damage
-
-
-def infinity_game():
-    run = True
-
-    field_sprite = pygame.sprite.Group()
-    field = pygame.sprite.Sprite()
-    field.image = pygame.transform.scale(load_image('field.png'), (1920, 1080))
-    field.rect = field.image.get_rect()
-    field_sprite.add(field)
-
-    sale_point_sprite = pygame.sprite.Group()
-    sale_point = pygame.sprite.Sprite()
-    sale_point.image = pygame.transform.scale(load_image('sale_point.png'), (400, 200))
-    sale_point.rect = sale_point.image.get_rect().move(1000, 300)
-    sale_point_sprite.add(sale_point)
-
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            """
-
-            ЛОГИКА ВЗАИМОДЕЙСТВИЯ С ПЕРСОНАЖЕМ
-
-            """
-        field_sprite.draw(screen)
-        sale_point_sprite.draw(screen)
-        pygame.display.flip()
 
 
 def company_game():
@@ -105,7 +59,7 @@ def end_game():
     pass
 
 
-image = load_image("startmenu.png")
+image = expansion.load_image("startmenu.png")
 eng = Engine()
 
 
@@ -114,12 +68,13 @@ def start_menu():
     Функция для реализации стартового меню и его кнопок.
     '''
     run = True
+    c = 0
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                click_data = {(range(15, 435), range(345, 480)): (infinity_game, eng.music('1.mp3')),
+                click_data = {(range(15, 435), range(345, 480)): (InfinityMode.infinity_game, eng.music(('song_2.mp3', 'song_1.mp3'))),
                               (range(1650, 1920), range(895, 1025)): exit_game,
                               (range(15, 435), range(175, 315)): company_game,
                               (range(15, 435), range(525, 655)): statictics}
@@ -127,10 +82,10 @@ def start_menu():
                     if event.pos[0] in i[0] and event.pos[1] in i[1]:
                         for j in range(len(i)):
                             click_data[i][j]()
-        screen.fill('black')
-        screen.blit(image, (0, 0))
+        expansion.SCREEN.fill('black')
+        expansion.SCREEN.blit(image, (0, 0))
         pygame.display.flip()
-        clock.tick(60)
+        expansion.CLOCK.tick(60)
 
 
 start_menu()
