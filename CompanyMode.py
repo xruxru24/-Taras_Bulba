@@ -37,15 +37,14 @@ def infinity_game():
     sale_point.rect = sale_point.image.get_rect().move(1000, 300)
     sale_point_sprite.add(sale_point)
 
+
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            """
-
-            ЛОГИКА ВЗАИМОДЕЙСТВИЯ С ПЕРСОНАЖЕМ
-
-            """
+            keys = pygame.key.get_pressed()
+        player.run(keys)
+        all_sprites.update()
         field_sprite.draw(screen)
         sale_point_sprite.draw(screen)
         pygame.display.flip()
