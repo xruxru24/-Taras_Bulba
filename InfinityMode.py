@@ -1,6 +1,6 @@
 import pygame, os, sys
 from random import choices
-from Units import Player, SwordMan
+from Units import Player, SwordMan, Archer
 import expansion
 
 class sale_spot:
@@ -43,7 +43,7 @@ def infinity_game():
 
     SALE_SPOT = sale_spot()
     player = Player(50, 50)
-    swordman = SwordMan(300, 300)
+    swordman = Archer(300, 300)
     swordman.set_player(player)
     c = 0
 
