@@ -2,7 +2,6 @@ import pygame, os, sys
 from random import choices
 from Units import Player, SwordMan
 import expansion
-from main_menu import eng
 
 class sale_spot:
     def __init__(self):
