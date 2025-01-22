@@ -1,7 +1,4 @@
-import random
-
 import pygame
-import os
 import sys
 import Units
 import InfinityMode
@@ -9,6 +6,7 @@ import expansion
 from expansion import SCREEN
 
 pygame.mixer.init()
+
 
 class Engine:
     def __init__(self):
@@ -20,8 +18,7 @@ class Engine:
             pygame.mixer.music.load(i)
             pygame.mixer.music.queue(i)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(1)
-
+        pygame.mixer.music.set_volume(0.6)
 
     def damage_collides(self, weapon, dir, who, creeps):
         data_player_dir = {'up': (0, -weapon.raduis), 'down': (0, weapon.raduis),
