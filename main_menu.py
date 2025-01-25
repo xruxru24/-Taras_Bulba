@@ -38,7 +38,7 @@ class Engine:
                     creeps.pop(unit)
                     if isinstance(unit, Units.Player):
                         self.deaths += 1
-                        end_game()
+                        statictics('end_game')
                     else:
                         self.kills += 1
                         self.damage += unit.health
@@ -46,10 +46,13 @@ class Engine:
                     unit.health -= weapon.damage
                     self.damage += weapon.damage
                 self.hits += 1
-        self.update_stats()
+        self.update_stats('all_time')
+        self.update_stats('one_game')
 
-    def update_stats(self):
-        with open('stats.csv', mode='wt') as file:
+    def update_stats(self, param):
+        data_files = {'all_time': 'stats.csv',
+                      'one_game': 'stats_one_game.csv'}
+        with open(data_files[param], mode='wt') as file:
             temp = csv.reader(file, delimiter=';', quotechar='"')
             temp = sorted(temp, key=lambda x: int(x[1]))
             data = [self.damage, self.kills, self.deaths, self.hits]
@@ -68,11 +71,13 @@ def company_game():
     pass
 
 
-def statictics():
+def statictics(param=None):
     data_coords = {'Deaths': (680, 370),
                    'Kills': (685, 430),
                    'Hits': (700, 485),
                    'Damage': (650, 580)}
+    data_files = {None: 'stats.csv',
+                  'end_game': 'stats_one_game.csv'}
     run = True
     while run:
         for event in pygame.event.get():
@@ -83,7 +88,7 @@ def statictics():
                 start_menu()
                 run = False
         expansion.SCREEN.blit(image1, (400, 300))
-        with open('stats.csv', mode='rt') as file:
+        with open(data_files[param], mode='rt') as file:
             data = list(csv.reader(file, delimiter=';', quotechar='"'))
             for stat in data:
                 num = font.render(str(stat[1]), False, '#880015')
@@ -93,10 +98,6 @@ def statictics():
 
 def exit_game():
     sys.exit()
-
-
-def end_game():
-    pass
 
 
 def start_menu():
@@ -119,7 +120,6 @@ def start_menu():
                     if event.pos[0] in i[0] and event.pos[1] in i[1]:
                         for func in click_data[i]:
                             func()
-
         expansion.SCREEN.fill('black')
         expansion.SCREEN.blit(image, (0, 0))
         pygame.display.flip()
