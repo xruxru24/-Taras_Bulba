@@ -27,8 +27,10 @@ class Engine:
         pygame.mixer.music.set_volume(0.6)
 
     def damage_collides(self, weapon, dir, who, creeps):
-        data_player_dir = {'up': (0, -weapon.raduis), 'down': (0, weapon.raduis),
-                           'left': (-weapon.raduis, 0), 'right': (weapon.raduis, 0)}
+        data_player_dir = {'up': (-(weapon.raduis // 4), -weapon.raduis),
+                           'down': (-(weapon.radius // 4), 116),
+                           'left': (-weapon.raduis, -(weapon.raduis // 4)),
+                           'right': (84, -(weapon.raduis // 4))}
         divs = data_player_dir[dir]
         hitbox_weapon = pygame.Rect(who.coords[0] + divs[0], who.coords[1] + divs[1], weapon.raduis, weapon.raduis)
         for unit in creeps:
