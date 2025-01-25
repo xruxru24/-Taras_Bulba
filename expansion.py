@@ -2,7 +2,7 @@ import pygame, os, sys
 import Units
 from random import randint
 
-SIZE = WIDTH, HEIGHT = 1920, 1080
+SIZE = WIDTH, HEIGHT = 1200, 1000
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
 FPS = 60
@@ -42,6 +42,7 @@ def switching_waves(cur_wave, creepe):
 
 player_image = load_image('taras.png', -1)
 sword_man = load_image('swordsman.png', -1)
+pig_man = load_image('pigman.png', -1)
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 creepe_group = pygame.sprite.Group()
