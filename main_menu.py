@@ -7,8 +7,9 @@ import csv
 from expansion import SCREEN
 
 pygame.mixer.init()
+pygame.font.init()
 image = expansion.load_image("startmenu.png")
-image1 = expansion.load_image("statsmenu.png")
+image1 = expansion.load_image("stats.png")
 
 
 class Engine:
@@ -49,15 +50,18 @@ class Engine:
 
     def update_stats(self):
         with open('stats.csv', mode='wt') as file:
+            temp = csv.reader(file, delimiter=';', quotechar='"')
+            temp = sorted(temp, key=lambda x: int(x[1]))
             data = [self.damage, self.kills, self.deaths, self.hits]
-            data1 = ['Damage', 'Kills', 'Deaths', 'Hits']
-            temp = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-            for i in range(len(data)):
-                temp.writerow([data1[i], data[i]])
+            for row in range(len(temp)):
+                temp[row][1] += data[row]
+            writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+            for i in range(len(temp)):
+                writer.writerow(temp[i])
 
 
 eng = Engine()
-font = pygame.font.SysFont(None, 50)
+font = pygame.font.SysFont('Comic Sans MS', 27)
 
 
 def company_game():
@@ -65,24 +69,24 @@ def company_game():
 
 
 def statictics():
-    data_coords = {'Deaths': (100, 200),
-                   'Kills': (80, 300),
-                   'Hits': (70, 400),
-                   'Damage': (100, 500)}
+    data_coords = {'Deaths': (680, 370),
+                   'Kills': (685, 430),
+                   'Hits': (700, 485),
+                   'Damage': (650, 580)}
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN and \
-                    event.pos[0] in range(400, 500) and event.pos[1] in range(450, 500):
+                    event.pos[0] in range(855, 980) and event.pos[1] in range(620, 685):
                 start_menu()
                 run = False
         expansion.SCREEN.blit(image1, (400, 300))
         with open('stats.csv', mode='rt') as file:
             data = list(csv.reader(file, delimiter=';', quotechar='"'))
             for stat in data:
-                num = font.render(str(stat[0]), False, 'red')
+                num = font.render(str(stat[1]), False, '#880015')
                 expansion.SCREEN.blit(num, (data_coords[stat[0]]))
         pygame.display.flip()
 
@@ -107,14 +111,15 @@ def start_menu():
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 click_data = {(range(15, 435), range(345, 480)): (
-                InfinityMode.infinity_game, eng.music(('song_2.mp3', 'song_1.mp3'))),
-                              (range(1650, 1920), range(895, 1025)): exit_game,
-                              (range(15, 435), range(175, 315)): company_game,
-                              (range(15, 435), range(525, 655)): statictics}
+                    InfinityMode.infinity_game, eng.music(('song_2.mp3', 'song_1.mp3'))),
+                    (range(1650, 1920), range(895, 1025)): (exit_game, eng.music(('song_2.mp3', 'song_1.mp3'))),
+                    (range(15, 435), range(175, 315)): (company_game, eng.music(('song_2.mp3', 'song_1.mp3'))),
+                    (range(15, 435), range(525, 655)): (statictics, eng.music(('song_2.mp3', 'song_1.mp3')))}
                 for i in click_data.keys():
                     if event.pos[0] in i[0] and event.pos[1] in i[1]:
-                        for j in range(len(i)):
-                            click_data[i][j]()
+                        for func in click_data[i]:
+                            func()
+
         expansion.SCREEN.fill('black')
         expansion.SCREEN.blit(image, (0, 0))
         pygame.display.flip()

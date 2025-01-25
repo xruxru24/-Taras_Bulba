@@ -3,7 +3,7 @@ import pygame, os, sys
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
-FPS = 10
+FPS = 60
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
