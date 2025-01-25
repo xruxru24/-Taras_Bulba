@@ -1,11 +1,12 @@
 import pygame
 import expansion
+import Engine
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(expansion.player_group, expansion.all_sprites)
-        self.image = pygame.transform.scale(expansion.player_image, (84, 116))
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(player_group, all_sprites)
+        self.image = pygame.transform.scale(player_image, (84, 116))
         self.rect = self.image.get_rect().move(pos_x, pos_y)
         self.x_speed = 0
         self.y_speed = 0
@@ -19,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.dash_cooldown_time = 2
         self.dash_cooldown = 0
         self.is_dashing = False
+        self.weapon = weapon
 
     def run(self, keys):
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
@@ -29,6 +31,14 @@ class Player(pygame.sprite.Sprite):
             self.y_speed -= self.acceleration
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.y_speed += self.acceleration
+        if keys[pygame.K_LEFT]:
+            Engine.eng.damage_collides(self.weapon, 'left', self, creepe_group)
+        elif keys[pygame.K_RIGHT]:
+            Engine.eng.damage_collides(self.weapon, 'right', self, creepe_group)
+        elif keys[pygame.K_UP]:
+            Engine.eng.damage_collides(self.weapon, 'up', self, creepe_group)
+        elif keys[pygame.K_DOWN]:
+            Engine.eng.damage_collides(self.weapon, 'down', self, creepe_group)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
@@ -64,15 +74,15 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = int(self.pos_y)
 
         self.rect.clamp_ip(expansion.SCREEN.get_rect())
+        self.weapon.move(*self.get_position())
 
     def get_position(self):
-        print(self.rect.centerx, self.rect.centery)
         return self.rect.centerx, self.rect.centery
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, image, speed, acceleration, friction, hp, weapon):
-        super().__init__(expansion.creepe_group, expansion.all_sprites)
+        super().__init__(creepe_group, all_sprites)
         self.weapon = weapon
         self.image = image
         self.rect = self.image.get_rect().move(pos_x, pos_y)
@@ -106,6 +116,7 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.x = int(self.pos_x)
             self.rect.y = int(self.pos_y)
             self.rect.clamp_ip(expansion.SCREEN.get_rect())
+            self.weapon.move(self.pos_x, self.pos_y)
 
     def move_logic(self, dx, dy):
         if dx > 0:
@@ -119,13 +130,13 @@ class Enemy(pygame.sprite.Sprite):
 
 
 class SwordMan(Enemy):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(pos_x, pos_y, expansion.sword_man, 0.6, 0.005, 0.8, 100)
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, sword_man, 0.6, 0.005, 0.8, 100, weapon)
 
 
 class Archer(Enemy):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(pos_x, pos_y, expansion.sword_man, 0.3, 0.005, 0.8, 1)
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, sword_man, 0.3, 0.005, 0.8, 1, weapon)
 
     def move_logic(self, dx, dy):
         screen_rect = expansion.SCREEN.get_rect()
@@ -165,12 +176,18 @@ class Archer(Enemy):
             self.pos_y = screen_rect.bottom - self.rect.height
 
 class PigMan(Enemy):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(pos_x, pos_y, expansion.pig_man, 0.4, 0.001, 0.8, 12000)
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, expansion.pig_man, 0.4, 0.001, 0.8, 12000, weapon)
 
 
 
-
+player_image = expansion.load_image('taras.png', -1)
+sword_man = expansion.load_image('swordsman.png', -1)
+pig_man = expansion.load_image('pigman.png', -1)
+player_group = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+creepe_group = pygame.sprite.Group()
+weapon_group = pygame.sprite.Group()
 
 
 

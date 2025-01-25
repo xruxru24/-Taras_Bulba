@@ -1,7 +1,9 @@
 import pygame, os, sys
 from random import choices
-from Units import Player, SwordMan, Archer
 import expansion
+import Weapons
+import Units
+
 
 class sale_spot:
     def __init__(self):
@@ -42,9 +44,11 @@ def infinity_game():
     sale_point_sprite.add(sale_point)
 
     SALE_SPOT = sale_spot()
-    player = Player(50, 50)
-    swordman = Archer(300, 300)
-    swordman.set_player(player)
+    player = Units.Player(50, 50, Weapons.Saber())
+    archer = Units.Archer(300, 300, Weapons.Bow())
+    archer.set_player(player)
+    swordsman = Units.SwordMan(200, 300, Weapons.Dagger())
+    swordsman.set_player(player)
     c = 0
 
     while run:
@@ -54,11 +58,15 @@ def infinity_game():
 
         keys = pygame.key.get_pressed()
         player.run(keys)
-        expansion.player_group.update()
-        expansion.all_sprites.update()
+        Units.player_group.update()
+        Units.all_sprites.update()
+
+        Units.weapon_group.update()
         field_sprite.draw(expansion.SCREEN)
+
         sale_point_sprite.draw(expansion.SCREEN)
-        expansion.player_group.draw(expansion.SCREEN)
-        expansion.creepe_group.draw(expansion.SCREEN)
+        Units.player_group.draw(expansion.SCREEN)
+        Units.creepe_group.draw(expansion.SCREEN)
+        Units.weapon_group.draw(expansion.SCREEN)
 
         pygame.display.flip()
