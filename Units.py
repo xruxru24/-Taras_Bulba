@@ -66,11 +66,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.clamp_ip(expansion.SCREEN.get_rect())
 
     def get_position(self):
+        print(self.rect.centerx, self.rect.centery)
         return self.rect.centerx, self.rect.centery
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, image, speed, acceleration, friction):
+    def __init__(self, pos_x, pos_y, image, speed, acceleration, friction, hp):
         super().__init__(expansion.creepe_group, expansion.all_sprites)
         self.image = image
         self.rect = self.image.get_rect().move(pos_x, pos_y)
@@ -82,7 +83,7 @@ class Enemy(pygame.sprite.Sprite):
         self.player = None
         self.pos_x = float(pos_x)
         self.pos_y = float(pos_y)
-        self.hp = 100
+        self.hp = hp
 
     def set_player(self, player):
         self.player = player
@@ -118,12 +119,12 @@ class Enemy(pygame.sprite.Sprite):
 
 class SwordMan(Enemy):
     def __init__(self, pos_x, pos_y):
-        super().__init__(pos_x, pos_y, expansion.sword_man, 0.6, 0.005, 0.8)
+        super().__init__(pos_x, pos_y, expansion.sword_man, 0.6, 0.005, 0.8, 100)
 
 
 class Archer(Enemy):
     def __init__(self, pos_x, pos_y):
-        super().__init__(pos_x, pos_y, expansion.sword_man, 0.3, 0.005, 0.8)
+        super().__init__(pos_x, pos_y, expansion.sword_man, 0.3, 0.005, 0.8, 1)
 
     def move_logic(self, dx, dy):
         screen_rect = expansion.SCREEN.get_rect()
@@ -161,3 +162,15 @@ class Archer(Enemy):
         elif self.rect.bottom > screen_rect.bottom:
             self.y_speed = -abs(self.y_speed)
             self.pos_y = screen_rect.bottom - self.rect.height
+
+class PigMan(Enemy):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(pos_x, pos_y, expansion.pig_man, 0.4, 0.001, 0.8, 12000)
+
+
+
+
+
+
+
+
