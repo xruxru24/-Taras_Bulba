@@ -71,8 +71,9 @@ class Player(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, image, speed, acceleration, friction, hp):
+    def __init__(self, pos_x, pos_y, image, speed, acceleration, friction, hp, weapon):
         super().__init__(expansion.creepe_group, expansion.all_sprites)
+        self.weapon = weapon
         self.image = image
         self.rect = self.image.get_rect().move(pos_x, pos_y)
         self.x_speed = 0
