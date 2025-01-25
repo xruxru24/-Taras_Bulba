@@ -1,9 +1,16 @@
 import pygame, os, sys
+import Units
+from random import randint
 
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
 FPS = 60
+wave = 1
+
+pygame.font.init()
+font = pygame.font.SysFont('Comic Sans MS', 40)
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -19,6 +26,19 @@ def load_image(name, colorkey=None):
     else:
         image = image.convert_alpha()
     return image
+
+
+wave_image = load_image('waves_1.png')
+
+
+def switching_waves(cur_wave, creepe):
+    creepe = creepe * cur_wave + 3
+    SCREEN.blit(wave_image, (760, 200))
+    num = font.render(str(cur_wave), False, '#880015')
+    SCREEN.blit(num, (840, 220))
+    for i in range(creepe):
+        creepe_group.add(Units.SwordMan(randint(100, WIDTH - 100), randint(1620, 1920)))
+
 
 player_image = load_image('taras.png', -1)
 sword_man = load_image('swordsman.png', -1)
