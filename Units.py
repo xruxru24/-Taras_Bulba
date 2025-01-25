@@ -1,3 +1,4 @@
+from random import choice
 import pygame
 import expansion
 import Engine
@@ -116,7 +117,6 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.x = int(self.pos_x)
             self.rect.y = int(self.pos_y)
             self.rect.clamp_ip(expansion.SCREEN.get_rect())
-            self.weapon.move(self.pos_x, self.pos_y)
 
     def move_logic(self, dx, dy):
         if dx > 0:
@@ -177,7 +177,54 @@ class Archer(Enemy):
 
 class PigMan(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, expansion.pig_man, 0.4, 0.001, 0.8, 12000, weapon)
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 12000, weapon)
+
+
+class Boss(Enemy):
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 12000, weapon)
+        self.teleport_cooldown = 0
+        self.teleport_cooldown_time = 3
+        self.is_teleporting = False
+
+    def update(self):
+        super().update()
+        if self.teleport_cooldown > 0:
+            self.teleport_cooldown -= 1 / expansion.FPS
+        self.teleport()
+
+    def teleport(self):
+        if self.teleport_cooldown <= 0 and not self.is_teleporting:
+            self.is_teleporting = True
+            self.teleport_cooldown = self.teleport_cooldown_time
+            direction = choice(['up', 'down', 'left', 'right'])
+
+            teleport_distance = 150
+
+            new_x = self.pos_x
+            new_y = self.pos_y
+
+            if direction == 'up':
+                new_y -= teleport_distance
+            elif direction == 'down':
+                new_y += teleport_distance
+            elif direction == 'left':
+                new_x -= teleport_distance
+            elif direction == 'right':
+                new_x += teleport_distance
+
+            screen_rect = expansion.SCREEN.get_rect()
+
+            new_x = max(screen_rect.left, min(new_x, screen_rect.right - self.rect.width))
+            new_y = max(screen_rect.top, min(new_y, screen_rect.bottom - self.rect.height))
+
+            self.pos_x = new_x
+            self.pos_y = new_y
+
+            self.rect.x = int(self.pos_x)
+            self.rect.y = int(self.pos_y)
+        if self.is_teleporting:
+            self.is_teleporting = False
 
 
 
@@ -188,7 +235,3 @@ player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 creepe_group = pygame.sprite.Group()
 weapon_group = pygame.sprite.Group()
-
-
-
-

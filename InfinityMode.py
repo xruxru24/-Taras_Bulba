@@ -45,7 +45,7 @@ def infinity_game():
 
     SALE_SPOT = sale_spot()
     player = Units.Player(50, 50, Weapons.Saber())
-    archer = Units.Archer(300, 300, Weapons.Bow())
+    archer = Units.Boss(300, 300, 1000)
     archer.set_player(player)
     swordsman = Units.SwordMan(200, 300, Weapons.Dagger())
     swordsman.set_player(player)

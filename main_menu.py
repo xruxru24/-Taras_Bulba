@@ -2,10 +2,10 @@ import pygame
 import sys
 from InfinityMode import infinity_game
 import expansion
-import csv
-from Engine import eng, statictics
+from Engine import Engine, statictics
 
 image = expansion.load_image("startmenu.png")
+eng = Engine()
 
 
 def company_game():
