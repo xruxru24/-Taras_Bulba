@@ -37,17 +37,19 @@ class Engine:
             if hitbox_weapon.colliderect(unit.rect):
                 if unit.health - weapon.damage <= 0:
                     unit.health = 0
-                    creeps.pop(unit)
+                    expansion.creepe_group.pop(unit)
                     if isinstance(unit, Units.Player):
                         self.deaths += 1
+                        expansion.player_group.pop(unit)
                         statictics('end_game')
                     else:
                         self.kills += 1
+                        self.hits += 1
                         self.damage += unit.health
                 else:
                     unit.health -= weapon.damage
                     self.damage += weapon.damage
-                self.hits += 1
+                    self.hits += 1
         self.update_stats('all_time')
         self.update_stats('one_game')
 
