@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.pos_x = float(pos_x)
         self.pos_y = float(pos_y)
         self.hp = 100
+        self.coins = 0
         self.dash_distance = 150
         self.dash_cooldown_time = 2
         self.dash_cooldown = 0
