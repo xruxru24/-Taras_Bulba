@@ -63,7 +63,7 @@ class Engine:
         with open(data_files[param], mode='rt') as file:
             temp = csv.reader(file, delimiter=';', quotechar='"')
             for index, row in enumerate(temp):
-                print(row)
+                pass
             temp = sorted(temp, key=lambda x: int(x[1]))
             data = [self.damage, self.kills, self.deaths, self.hits]
             for row in range(len(temp)):

@@ -35,7 +35,7 @@ class Saber(Weapon):
 class Dagger(Weapon):
     def __init__(self):
         self.image = pygame.transform.scale(load_image('Dagger.png'), (50, 50))
-        super().__init__(self.image, -10, 10, 20, 30, 0.3)
+        super().__init__(self.image, -10, 10, 100, 5000, 0.3)
 
 
 class Bow(Weapon):

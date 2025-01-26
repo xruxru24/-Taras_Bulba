@@ -1,35 +1,42 @@
 import pygame, os, sys
-from random import choices
 
 from Units import creepe_group
+from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
 import Units
 
-player = Units.Player(50, 50, Weapons.Saber())
+pygame.font.init()
+player = Units.Player(50, 50, Weapons.Dagger())
 font = pygame.font.SysFont('Comic Sans MS', 40)
 
-class sale_spot:
+class SaleSpot:
     def __init__(self):
-        self.items = {
-            ''' РАЗНЫЕ ВЕЩИ, ДОБАВЛЮ КОГДА ДОДЕЛАЮ КЛАССЫ ОРУЖИЙ '''
-        }
-        self.assortment = {'''СПИСОК ВЕЩЕЙ КОТОРЫЕ СЕЙЧАС НАХОДЯТСЯ В МАГАЗИНЕ'''}
+        self.items = {Dagger: 15, Saber: 30, CavalrySword: 45}
+        self.flag = False
 
-    def buy(self, elem, money, player_money):
-        if player_money < money:
-            return 'Недостаточно средств!'
-        else:
-            '''Логика списывания средств со счета персонажа'''
-            self.assortment.pop(elem)
-            if not self.assortment.items():
-                self.update_inventory()
-            return 'Удачно'
 
-    def update_inventory(self):
-        self.assortment.clear()
-        for v, k in choices(self.items.items(), 3):
-            self.assortment.append[v] = k
+    def update(self):
+        SCREEN.blit(load_image('sale_spot.png'), (550, 400))
+
+    def buy(self, x, y):
+        click_data = {(range(500, 722), range(575, 767)): CavalrySword,
+            (range(723, 996), range(575, 767)): Dagger,
+            (range(1000, 1200), range(575, 767)): Saber}
+
+        s = 1000
+
+        for i in click_data.keys():
+            if x in i[0] and y in i[1]:
+                if player.money <= self.items[click_data[i]]:
+                    n = font.render('Недостаточно средств!', False, 'black')
+                    while s != 0:
+                        SCREEN.blit(n, (675, 400))
+                        pygame.display.flip()
+                        s -= 1
+                else:
+                    player.weapon.kill()
+                    player.weapon = click_data[i]()
 
 
 def infinity_game():
@@ -47,12 +54,14 @@ def infinity_game():
     sale_point.rect = sale_point.image.get_rect().move(1000, 300)
     sale_point_sprite.add(sale_point)
 
-    SALE_SPOT = sale_spot()
+    SALE_SPOT = SaleSpot()
     switching_waves(1, 3)
     cur_wave = 0
     c = 0
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')
+    K_e_counter = 0
+
 
     while run:
         mb_down = False
@@ -70,8 +79,13 @@ def infinity_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not SALE_SPOT.flag:
                 mb_down = True
+            elif event.type == pygame.MOUSEBUTTONDOWN and SALE_SPOT.flag:
+                SALE_SPOT.buy(*event.pos)
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_e and FLAG_WAVE_TIME != 6000 \
+                and player.get_position()[0] in range(1000, 1200) and player.get_position()[1] in range(0, 500):
+                K_e_counter += 1
 
         keys = pygame.key.get_pressed()
         player.run(keys, mb_down)
@@ -85,5 +99,13 @@ def infinity_game():
         Units.player_group.draw(SCREEN)
         Units.creepe_group.draw(SCREEN)
         Units.weapon_group.draw(SCREEN)
+
+        if K_e_counter % 2 != 0 and FLAG_WAVE_TIME != 6000:
+            SALE_SPOT.update()
+            SALE_SPOT.flag = True
+        elif K_e_counter % 2 == 0 or FLAG_WAVE_TIME == 6000:
+            SALE_SPOT.flag = False
+        elif K_e_counter % 2 != 0 and FLAG_WAVE_TIME == 6000:
+            K_e_counter += 1
 
         pygame.display.flip()

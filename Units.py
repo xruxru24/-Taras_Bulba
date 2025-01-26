@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.pos_x = float(pos_x)
         self.pos_y = float(pos_y)
         self.hp = 100
+        self.money = 100
         self.dash_distance = 150
         self.dash_cooldown_time = 2
         self.dash_cooldown = 0
@@ -39,16 +40,12 @@ class Player(pygame.sprite.Sprite):
             self.last_button = pygame.K_DOWN
         if self.last_button == pygame.K_LEFT and mb_down:
             eng.damage_collides(self.weapon, 'left', self, creepe_group)
-            print(self.last_button)
         elif self.last_button == pygame.K_RIGHT and mb_down:
             eng.damage_collides(self.weapon, 'right', self, creepe_group)
-            print(self.last_button)
         elif self.last_button == pygame.K_UP and mb_down:
             eng.damage_collides(self.weapon, 'up', self, creepe_group)
-            print(self.last_button)
         elif self.last_button == pygame.K_DOWN and mb_down:
             eng.damage_collides(self.weapon, 'down', self, creepe_group)
-            print(self.last_button)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
