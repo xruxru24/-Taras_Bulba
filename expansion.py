@@ -29,9 +29,6 @@ def load_image(name, colorkey=None):
     return image
 
 
-wave_image = load_image('waves_1.png')
-
-
 def switching_waves(cur_wave, creepe):
 
     from Units import creepe_group, SwordMan, Archer
@@ -39,10 +36,6 @@ def switching_waves(cur_wave, creepe):
     from InfinityMode import player
 
     creepe = creepe * cur_wave
-    SCREEN.blit(wave_image, (760, 200))
-    num = font.render(str(cur_wave), False, '#880015')
-    SCREEN.blit(num, (840, 220))
-    pygame.display.flip()
 
     for i in range(creepe):
         ch = randint(0, 1)

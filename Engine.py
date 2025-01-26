@@ -42,9 +42,6 @@ class Engine:
                     unit.hp = 0
                     unit.weapon.kill()
                     unit.kill()
-                    if len(creepe_group) == 0:
-                        expansion.wave += 1
-                        expansion.switching_waves(expansion.wave, 3)
                     if isinstance(unit, Player):
                         self.deaths += 1
                         player_group.pop(unit)

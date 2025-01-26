@@ -6,7 +6,8 @@ from expansion import load_image, SCREEN, switching_waves
 import Weapons
 import Units
 
-player = Units.Player(50, 50, Weapons.Bow())
+player = Units.Player(50, 50, Weapons.Saber())
+font = pygame.font.SysFont('Comic Sans MS', 40)
 
 class sale_spot:
     def __init__(self):
@@ -48,10 +49,24 @@ def infinity_game():
 
     SALE_SPOT = sale_spot()
     switching_waves(1, 3)
+    cur_wave = 0
     c = 0
+    FLAG_WAVE_TIME = 6000
+    wave_image = load_image('waves_1.png')
 
     while run:
         mb_down = False
+        if FLAG_WAVE_TIME == 0:
+            FLAG_WAVE_TIME = 6000
+            cur_wave += 1
+            switching_waves(cur_wave, 3)
+
+        if len(creepe_group) == 0:
+            SCREEN.blit(wave_image, (760, 200))
+            num = font.render(str(cur_wave), False, '#880015')
+            SCREEN.blit(num, (840, 220))
+            pygame.display.flip()
+            FLAG_WAVE_TIME -= 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
