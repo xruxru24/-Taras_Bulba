@@ -1,5 +1,3 @@
-import time
-
 import pygame
 import csv
 import pygame.font
@@ -14,10 +12,7 @@ image1 = expansion.load_image("stats.png")
 
 class Engine:
     def __init__(self):
-        self.kills = 0
-        self.damage = 0
-        self.deaths = 0
-        self.hits = 0
+        pass
 
     def music(self, songs):
         for i in songs:
@@ -31,46 +26,45 @@ class Engine:
                            'down': (-(weapon.attack_distance // 4), 116),
                            'left': (-weapon.attack_distance, -(weapon.attack_distance // 4)),
                            'right': (84, -(weapon.attack_distance // 4))}
+        damage, kills, hits, deaths = 0, 0, 0, 0
 
-        from Units import Player, creepe_group, player_group
+        from Units import Player, player_group
 
         divs = data_player_dir[dir]
         hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1], weapon.attack_distance, weapon.attack_distance)
         for unit in creeps:
             if hitbox_weapon.colliderect(unit.rect):
                 if unit.hp - weapon.damage <= 0:
-                    unit.hp = 0
                     unit.weapon.kill()
                     unit.kill()
                     if isinstance(unit, Player):
-                        self.deaths += 1
+                        deaths += 1
                         player_group.pop(unit)
                         statictics('end_game')
                     else:
-                        self.kills += 1
-                        self.hits += 1
-                        self.damage += unit.hp
+                        kills += 1
+                        hits += 1
+                        damage += unit.hp
                 else:
                     unit.hp -= weapon.damage
-                    self.damage += weapon.damage
-                    self.hits += 1
-        self.update_stats('all_time')
-        self.update_stats('one_game')
+                    damage += weapon.damage
+                    hits += 1
+        self.update_stats('all_time', damage, deaths, hits, kills)
+        self.update_stats('one_game', damage, deaths, hits, kills)
 
-    def update_stats(self, param):
+    def update_stats(self, param, damage, deaths, hits, kills):
         data_files = {'all_time': 'stats.csv',
                       'one_game': 'stats_one_game.csv'}
         with open(data_files[param], mode='rt') as file:
-            temp = csv.reader(file, delimiter=';', quotechar='"')
-            for index, row in enumerate(temp):
-                print(row)
-            temp = sorted(temp, key=lambda x: int(x[1]))
-            data = [self.damage, self.kills, self.deaths, self.hits]
+            temp = list(csv.reader(file, delimiter=';', quotechar='"'))
+            data = [damage, kills, deaths, hits]
+            temp = [value for value in temp if value]
             for row in range(len(temp)):
-                temp[row][1] += data[row]
+                temp[row][1] = str(int(temp[row][1]) + data[row])
+        with open(data_files[param], mode='wt') as file:
             writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-            for i in range(len(temp)):
-                writer.writerow(temp[i])
+            for row in temp:
+                writer.writerow(row)
 
 
 font = pygame.font.SysFont('Comic Sans MS', 27)
@@ -93,8 +87,9 @@ def statictics(param=None):
                     event.pos[0] in range(855, 980) and event.pos[1] in range(620, 685):
                 run = False
         expansion.SCREEN.blit(image1, (400, 300))
-        with open(data_files[param], mode='rt') as file:
+        with open(data_files[param], mode='rt', encoding='utf-8') as file:
             data = list(csv.reader(file, delimiter=';', quotechar='"'))
+            data = [value for value in data if value]
             for stat in data:
                 num = font.render(str(stat[1]), False, '#880015')
                 expansion.SCREEN.blit(num, (data_coords[stat[0]]))

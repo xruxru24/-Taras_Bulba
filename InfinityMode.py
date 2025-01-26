@@ -49,7 +49,7 @@ def infinity_game():
 
     SALE_SPOT = sale_spot()
     switching_waves(1, 3)
-    cur_wave = 0
+    cur_wave = 2
     c = 0
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')
@@ -64,7 +64,7 @@ def infinity_game():
         if len(creepe_group) == 0:
             SCREEN.blit(wave_image, (760, 200))
             num = font.render(str(cur_wave), False, '#880015')
-            SCREEN.blit(num, (840, 220))
+            SCREEN.blit(num, (940, 220))
             pygame.display.flip()
             FLAG_WAVE_TIME -= 1
         for event in pygame.event.get():
