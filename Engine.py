@@ -105,3 +105,11 @@ def statictics(param=None):
                 num = font.render(str(stat[1]), False, '#880015')
                 expansion.SCREEN.blit(num, (data_coords[stat[0]]))
         pygame.display.flip()
+        if param is not None:
+            with open(data_files[param], mode='wt') as file:
+                writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+                for row in range(len(data)):
+                    data[row][1] = '0'
+                writer.writerows(data)
+
+
