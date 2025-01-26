@@ -39,9 +39,9 @@ class Engine:
         divs = data_player_dir[dir][:2]
         hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1],
                                     weapon.attack_distance * 2, weapon.attack_distance * 2)
-        FLAG_SLASH_TIME = 10
+        FLAG_SLASH_TIME = 30
         while FLAG_SLASH_TIME != 0:
-            expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1]))
+            expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1] - 10))
             pygame.display.flip()
             FLAG_SLASH_TIME -= 1
         for unit in creeps:
@@ -55,7 +55,6 @@ class Engine:
                         statictics('end_game')
                     else:
                         kills += 1
-                        who.coins += 10
                         hits += 1
                         damage += unit.hp
                 else:
