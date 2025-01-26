@@ -8,6 +8,10 @@ pygame.font.init()
 import expansion
 
 image1 = expansion.load_image("stats.png")
+slashes_images = [pygame.transform.scale(expansion.load_image('slash_down.png'), (200, 140)),
+                  pygame.transform.scale(expansion.load_image('slash_up.png'), (200, 140)),
+                  pygame.transform.scale(expansion.load_image('slash_right.png'), (140, 200)),
+                  pygame.transform.scale(expansion.load_image('slash_left.png'), (140, 200))]
 
 
 class Engine:
@@ -22,16 +26,22 @@ class Engine:
         pygame.mixer.music.set_volume(0)
 
     def damage_collides(self, weapon, dir, who, creeps):
-        data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance),
-                           'down': (-(weapon.attack_distance // 4), 116),
-                           'left': (-weapon.attack_distance, -(weapon.attack_distance // 4)),
-                           'right': (84, -(weapon.attack_distance // 4))}
+        data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
+                           'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
+                           'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
+                           'right': (84, -(weapon.attack_distance // 4), slashes_images[2])}
         damage, kills, hits, deaths = 0, 0, 0, 0
 
         from Units import Player, player_group
 
-        divs = data_player_dir[dir]
-        hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1], weapon.attack_distance, weapon.attack_distance)
+        divs = data_player_dir[dir][:2]
+        hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1],
+                                    weapon.attack_distance * 2, weapon.attack_distance * 2)
+        FLAG_SLASH_TIME = 10
+        while FLAG_SLASH_TIME != 0:
+            expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1]))
+            pygame.display.flip()
+            FLAG_SLASH_TIME -= 1
         for unit in creeps:
             if hitbox_weapon.colliderect(unit.rect):
                 if unit.hp - weapon.damage <= 0:

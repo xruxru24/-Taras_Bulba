@@ -40,16 +40,12 @@ class Player(pygame.sprite.Sprite):
             self.last_button = pygame.K_DOWN
         if self.last_button == pygame.K_LEFT and mb_down:
             eng.damage_collides(self.weapon, 'left', self, creepe_group)
-            print(self.last_button)
         elif self.last_button == pygame.K_RIGHT and mb_down:
             eng.damage_collides(self.weapon, 'right', self, creepe_group)
-            print(self.last_button)
         elif self.last_button == pygame.K_UP and mb_down:
             eng.damage_collides(self.weapon, 'up', self, creepe_group)
-            print(self.last_button)
         elif self.last_button == pygame.K_DOWN and mb_down:
             eng.damage_collides(self.weapon, 'down', self, creepe_group)
-            print(self.last_button)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
