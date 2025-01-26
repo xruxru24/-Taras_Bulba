@@ -49,7 +49,7 @@ def infinity_game():
 
     SALE_SPOT = sale_spot()
     switching_waves(1, 3)
-    cur_wave = 2
+    cur_wave = 1
     c = 0
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')

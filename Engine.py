@@ -43,7 +43,7 @@ class Engine:
                         statictics('end_game')
                     else:
                         kills += 1
-                        unit.coins += 10
+                        who.coins += 10
                         hits += 1
                         damage += unit.hp
                 else:
