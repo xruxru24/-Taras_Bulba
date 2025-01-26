@@ -1,11 +1,14 @@
+import time
+
 import pygame
-import expansion
-import Units
 import csv
 import pygame.font
 
 pygame.mixer.init()
 pygame.font.init()
+
+import expansion
+
 image1 = expansion.load_image("stats.png")
 
 
@@ -28,19 +31,23 @@ class Engine:
                            'down': (-(weapon.attack_distance // 4), 116),
                            'left': (-weapon.attack_distance, -(weapon.attack_distance // 4)),
                            'right': (84, -(weapon.attack_distance // 4))}
+
+        from Units import Player, creepe_group, player_group
+
         divs = data_player_dir[dir]
         hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1], weapon.attack_distance, weapon.attack_distance)
         for unit in creeps:
             if hitbox_weapon.colliderect(unit.rect):
                 if unit.hp - weapon.damage <= 0:
                     unit.hp = 0
+                    unit.weapon.kill()
                     unit.kill()
-                    if len(Units.creepe_group) == 0:
-                        Units.wave += 1
+                    if len(creepe_group) == 0:
+                        expansion.wave += 1
                         expansion.switching_waves(expansion.wave, 3)
-                    if isinstance(unit, Units.Player):
+                    if isinstance(unit, Player):
                         self.deaths += 1
-                        Units.player_group.pop(unit)
+                        player_group.pop(unit)
                         statictics('end_game')
                     else:
                         self.kills += 1

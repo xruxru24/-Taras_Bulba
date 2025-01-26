@@ -1,12 +1,12 @@
 import pygame
 import time
-import Units
+from Units import weapon_group, all_sprites
 from expansion import load_image
 
 
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, image, koeff_x, koeff_y, damage, attack_distance, reload):
-        super().__init__(Units.weapon_group, Units.all_sprites)
+        super().__init__(weapon_group, all_sprites)
 
         self.image = image
         self.rect = self.image.get_rect()
@@ -22,30 +22,30 @@ class Weapon(pygame.sprite.Sprite):
 
 class CavalrySword(Weapon):
     def __init__(self):
-        self.image = pygame.transform.scale(load_image('CavalrySword.png'), (200, 200))
-        super().__init__(self.image, 45, 10, 25, 60, 0.5)
+        self.image = pygame.transform.scale(load_image('CavalrySword.png'), (100, 100))
+        super().__init__(self.image, -5, 50, 25, 60, 0.5)
 
 
 class Saber(Weapon):
     def __init__(self):
         self.image = pygame.transform.scale(load_image('Saber.png'), (150, 150))
-        super().__init__(self.image, 75, 10, 40, 60, 0.7)
+        super().__init__(self.image, 10, 75, 40, 60, 0.7)
 
 
 class Dagger(Weapon):
     def __init__(self):
         self.image = pygame.transform.scale(load_image('Dagger.png'), (50, 50))
-        super().__init__(self.image, 45, 10, 20, 30, 0.3)
+        super().__init__(self.image, -10, 10, 20, 30, 0.3)
 
 
 class Bow(Weapon):
     def __init__(self):
-        self.image = pygame.transform.scale(load_image('Bow.png'), (150, 150))
-        super().__init__(self.image, 45, 10, 0, 0, 4)
+        self.image = pygame.transform.scale(load_image('Bow.png'), (125, 125))
+        super().__init__(self.image, 25, 40, 0, 0, 4)
 
 class Arrow(pygame.sprite.Sprite):
     def __init__(self, image, bow_x, bow_y, player_x, player_y):
-        super().__init__(Units.weapon_group, Units.all_sprites)
+        super().__init__(weapon_group, all_sprites)
 
         self.image = pygame.transform.scale(load_image('Arrow.png'), (150, 150))
         self.rect = self.image.get_rect()

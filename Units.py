@@ -1,6 +1,6 @@
 import pygame
-import expansion
-import Engine
+
+from Engine import eng
 
 
 class Player(pygame.sprite.Sprite):
@@ -21,24 +21,34 @@ class Player(pygame.sprite.Sprite):
         self.dash_cooldown = 0
         self.is_dashing = False
         self.weapon = weapon
+        self.last_button = None
 
-    def run(self, keys):
+
+    def run(self, keys, mb_down):
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.x_speed -= self.acceleration
+            self.last_button = pygame.K_LEFT
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.x_speed += self.acceleration
+            self.last_button = pygame.K_RIGHT
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.y_speed -= self.acceleration
+            self.last_button = pygame.K_UP
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.y_speed += self.acceleration
-        if keys[pygame.K_LEFT]:
-            Engine.eng.damage_collides(self.weapon, 'left', self, creepe_group)
-        elif keys[pygame.K_RIGHT]:
-            Engine.eng.damage_collides(self.weapon, 'right', self, creepe_group)
-        elif keys[pygame.K_UP]:
-            Engine.eng.damage_collides(self.weapon, 'up', self, creepe_group)
-        elif keys[pygame.K_DOWN]:
-            Engine.eng.damage_collides(self.weapon, 'down', self, creepe_group)
+            self.last_button = pygame.K_DOWN
+        if self.last_button == pygame.K_LEFT and mb_down:
+            eng.damage_collides(self.weapon, 'left', self, creepe_group)
+            print(self.last_button)
+        elif self.last_button == pygame.K_RIGHT and mb_down:
+            eng.damage_collides(self.weapon, 'right', self, creepe_group)
+            print(self.last_button)
+        elif self.last_button == pygame.K_UP and mb_down:
+            eng.damage_collides(self.weapon, 'up', self, creepe_group)
+            print(self.last_button)
+        elif self.last_button == pygame.K_DOWN and mb_down:
+            eng.damage_collides(self.weapon, 'down', self, creepe_group)
+            print(self.last_button)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
@@ -63,7 +73,7 @@ class Player(pygame.sprite.Sprite):
                 self.pos_x += self.dash_distance
 
         if self.dash_cooldown > 0:
-            self.dash_cooldown -= 1 / expansion.FPS
+            self.dash_cooldown -= 1 / FPS
         if self.is_dashing:
             self.is_dashing = False
 
@@ -73,7 +83,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = int(self.pos_x)
         self.rect.y = int(self.pos_y)
 
-        self.rect.clamp_ip(expansion.SCREEN.get_rect())
+        self.rect.clamp_ip(SCREEN.get_rect())
         self.weapon.move(*self.get_position())
 
     def get_position(self):
@@ -115,8 +125,8 @@ class Enemy(pygame.sprite.Sprite):
 
             self.rect.x = int(self.pos_x)
             self.rect.y = int(self.pos_y)
-            self.rect.clamp_ip(expansion.SCREEN.get_rect())
-            self.weapon.move(self.pos_x, self.pos_y)
+            self.rect.clamp_ip(SCREEN.get_rect())
+            self.weapon.move(self.rect.x, self.rect.y)
 
     def move_logic(self, dx, dy):
         if dx > 0:
@@ -139,7 +149,7 @@ class Archer(Enemy):
         super().__init__(pos_x, pos_y, sword_man, 0.3, 0.005, 0.8, 1, weapon)
 
     def move_logic(self, dx, dy):
-        screen_rect = expansion.SCREEN.get_rect()
+        screen_rect = SCREEN.get_rect()
 
         if abs(dx) > 500:
             if dx > 0:
@@ -177,13 +187,13 @@ class Archer(Enemy):
 
 class PigMan(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, expansion.pig_man, 0.4, 0.001, 0.8, 12000, weapon)
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 12000, weapon)
 
+from expansion import FPS, SCREEN, load_image
 
-
-player_image = expansion.load_image('taras.png', -1)
-sword_man = expansion.load_image('swordsman.png', -1)
-pig_man = expansion.load_image('pigman.png', -1)
+player_image = load_image('taras.png', -1)
+sword_man = load_image('swordsman.png', -1)
+pig_man = load_image('pigman.png', -1)
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 creepe_group = pygame.sprite.Group()

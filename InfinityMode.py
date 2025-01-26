@@ -1,9 +1,12 @@
 import pygame, os, sys
 from random import choices
-import expansion
+
+from Units import creepe_group
+from expansion import load_image, SCREEN, switching_waves
 import Weapons
 import Units
 
+player = Units.Player(50, 50, Weapons.Bow())
 
 class sale_spot:
     def __init__(self):
@@ -33,40 +36,39 @@ def infinity_game():
 
     field_sprite = pygame.sprite.Group()
     field = pygame.sprite.Sprite()
-    field.image = pygame.transform.scale(expansion.load_image('field.png'), (1920, 1080))
+    field.image = pygame.transform.scale(load_image('field.png'), (1920, 1080))
     field.rect = field.image.get_rect()
     field_sprite.add(field)
 
     sale_point_sprite = pygame.sprite.Group()
     sale_point = pygame.sprite.Sprite()
-    sale_point.image = pygame.transform.scale(expansion.load_image('sale_point.png'), (400, 200))
+    sale_point.image = pygame.transform.scale(load_image('sale_point.png'), (400, 200))
     sale_point.rect = sale_point.image.get_rect().move(1000, 300)
     sale_point_sprite.add(sale_point)
 
     SALE_SPOT = sale_spot()
-    player = Units.Player(50, 50, Weapons.Saber())
-    archer = Units.Archer(300, 300, Weapons.Bow())
-    archer.set_player(player)
-    swordsman = Units.SwordMan(200, 300, Weapons.Dagger())
-    swordsman.set_player(player)
+    switching_waves(1, 3)
     c = 0
 
     while run:
+        mb_down = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mb_down = True
 
         keys = pygame.key.get_pressed()
-        player.run(keys)
+        player.run(keys, mb_down)
         Units.player_group.update()
         Units.all_sprites.update()
 
         Units.weapon_group.update()
-        field_sprite.draw(expansion.SCREEN)
+        field_sprite.draw(SCREEN)
 
-        sale_point_sprite.draw(expansion.SCREEN)
-        Units.player_group.draw(expansion.SCREEN)
-        Units.creepe_group.draw(expansion.SCREEN)
-        Units.weapon_group.draw(expansion.SCREEN)
+        sale_point_sprite.draw(SCREEN)
+        Units.player_group.draw(SCREEN)
+        Units.creepe_group.draw(SCREEN)
+        Units.weapon_group.draw(SCREEN)
 
         pygame.display.flip()
