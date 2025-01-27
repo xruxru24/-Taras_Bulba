@@ -53,7 +53,8 @@ class Engine:
                     unit.kill()
                     if isinstance(unit, Player):
                         deaths += 1
-                        player_group.pop(unit)
+                        unit.weapon.kill()
+                        unit.kill()
                         statictics('end_game')
                     else:
                         kills += 1

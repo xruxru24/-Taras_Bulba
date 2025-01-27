@@ -1,4 +1,5 @@
 import pygame, os, sys
+from expansion import SCREEN
 
 
 def load_image(name, colorkey=None):
@@ -17,34 +18,27 @@ def load_image(name, colorkey=None):
     return image
 
 
-def infinity_game():
+image_1 = load_image("company_mode_menu.png")
+
+
+def company_game():
+
+    from main_menu import start_menu
+
+    click_data = {(range(140, 610), range(145, 900)): print('Свинья'),
+        (range(720, 1200), range(145, 900)): print('Войцех'),
+        (range(1290, 1745), range(145, 900)): print('Андрий'),
+        (range(1655, 1890), range(20, 95)): start_menu}
     run = True
-
-    size = width, height = 1920, 1080
-    screen = pygame.display.set_mode(size)
-    clock = pygame.time.Clock()
-    FPS = 60
-
-    field_sprite = pygame.sprite.Group()
-    field = pygame.sprite.Sprite()
-    field.image = pygame.transform.scale(load_image('field.png'), (1920, 1080))
-    field.rect = field.image.get_rect()
-    field_sprite.add(field)
-
-    sale_point_sprite = pygame.sprite.Group()
-    sale_point = pygame.sprite.Sprite()
-    sale_point.image = pygame.transform.scale(load_image('sale_point.png'), (400, 200))
-    sale_point.rect = sale_point.image.get_rect().move(1000, 300)
-    sale_point_sprite.add(sale_point)
-
-
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
-            keys = pygame.key.get_pressed()
-        player.run(keys)
-        all_sprites.update()
-        field_sprite.draw(screen)
-        sale_point_sprite.draw(screen)
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for i in click_data.keys():
+                    if event.pos[0] in i[0] and event.pos[1] in i[1]:
+                        click_data[i]
+        SCREEN.fill('black')
+        SCREEN.blit(image_1, (0, 0))
         pygame.display.flip()
+
