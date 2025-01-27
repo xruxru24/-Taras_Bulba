@@ -4,6 +4,8 @@ import pygame
 import csv
 import pygame.font
 
+from expansion import SCREEN
+
 pygame.mixer.init()
 pygame.font.init()
 
@@ -39,7 +41,7 @@ class Engine:
         divs = data_player_dir[dir][:2]
         hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1],
                                     weapon.attack_distance * 2, weapon.attack_distance * 2)
-        FLAG_SLASH_TIME = 30
+        FLAG_SLASH_TIME = 35
         while FLAG_SLASH_TIME != 0:
             expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1] - 10))
             pygame.display.flip()

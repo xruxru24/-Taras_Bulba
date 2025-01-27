@@ -13,6 +13,8 @@ class Weapon(pygame.sprite.Sprite):
         self.damage = damage
         self.attack_distance = attack_distance
         self.reload = reload
+        self.reloads = False
+        self.cooldown = self.reload * 600
 
         self.koeff_x, self.koeff_y = koeff_x, koeff_y
 
@@ -35,7 +37,7 @@ class Saber(Weapon):
 class Dagger(Weapon):
     def __init__(self):
         self.image = pygame.transform.scale(load_image('Dagger.png'), (50, 50))
-        super().__init__(self.image, -10, 10, 100, 5000, 0.3)
+        super().__init__(self.image, -10, 10, 20, 30, 0.2)
 
 
 class Bow(Weapon):

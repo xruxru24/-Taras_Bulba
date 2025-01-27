@@ -7,7 +7,7 @@ import Weapons
 import Units
 
 pygame.font.init()
-player = Units.Player(50, 50, Weapons.Dagger())
+player = Units.Player(50, 50, Weapons.Saber())
 font = pygame.font.SysFont('Comic Sans MS', 40)
 
 class SaleSpot:
@@ -37,6 +37,7 @@ class SaleSpot:
                 else:
                     player.weapon.kill()
                     player.weapon = click_data[i]()
+                    player.money -= self.items[click_data[i]]
 
 
 def infinity_game():
@@ -57,11 +58,9 @@ def infinity_game():
     SALE_SPOT = SaleSpot()
     switching_waves(1, 3)
     cur_wave = 1
-    c = 0
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')
     K_e_counter = 0
-
 
     while run:
         mb_down = False
@@ -70,21 +69,29 @@ def infinity_game():
             cur_wave += 1
             switching_waves(cur_wave, 3)
 
-        if len(creepe_group) == 0:
-            SCREEN.blit(wave_image, (760, 200))
-            num = font.render(str(cur_wave), False, '#880015')
-            SCREEN.blit(num, (940, 220))
-            pygame.display.flip()
-            FLAG_WAVE_TIME -= 1
+        if player.weapon.reloads:
+            if player.weapon.cooldown - 1 == 0:
+                player.weapon.reloads = False
+                player.weapon.cooldown = player.weapon.reload * 600
+            player.weapon.cooldown -= 1
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN and not SALE_SPOT.flag:
-                mb_down = True
+                if player.weapon.reloads:
+                    mb_down = False
+                else:
+                    player.weapon.reloads = True
+                    mb_down = True
             elif event.type == pygame.MOUSEBUTTONDOWN and SALE_SPOT.flag:
                 SALE_SPOT.buy(*event.pos)
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_e and FLAG_WAVE_TIME != 6000 \
-                and player.get_position()[0] in range(1000, 1200) and player.get_position()[1] in range(0, 500):
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_e \
+                    and player.get_position()[0] in range(800, 1200) \
+                    and player.get_position()[1] not in range(100, 500) and K_e_counter % 2 == 0:
+                K_e_counter += 1
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_e and K_e_counter % 2 != 0:
                 K_e_counter += 1
 
         keys = pygame.key.get_pressed()
@@ -100,6 +107,19 @@ def infinity_game():
         Units.creepe_group.draw(SCREEN)
         Units.weapon_group.draw(SCREEN)
 
+        if len(creepe_group) == 0:
+            SCREEN.blit(wave_image, (760, 200))
+            num = font.render(str(cur_wave), False, '#880015')
+            SCREEN.blit(num, (940, 220))
+            FLAG_WAVE_TIME -= 1
+
+        hp = font.render(f'Health: {player.hp}', False, 'Red')
+        SCREEN.blit(hp, (0, 950))
+
+        cash = font.render(f'Money: {player.money}', False, 'Black')
+        SCREEN.blit(cash, (0, 1000))
+
+
         if K_e_counter % 2 != 0 and FLAG_WAVE_TIME != 6000:
             SALE_SPOT.update()
             SALE_SPOT.flag = True
@@ -107,5 +127,9 @@ def infinity_game():
             SALE_SPOT.flag = False
         elif K_e_counter % 2 != 0 and FLAG_WAVE_TIME == 6000:
             K_e_counter += 1
+
+        if player.weapon.reloads:
+            cooldown = font.render('Can not do it now!', False, 'Black')
+            SCREEN.blit(cooldown, (1600, 900))
 
         pygame.display.flip()
