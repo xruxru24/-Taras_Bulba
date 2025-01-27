@@ -1,11 +1,9 @@
 import pygame
 import sys
-from InfinityMode import infinity_game
-import expansion
-from Engine import Engine, statictics
+from expansion import load_image, SCREEN, CLOCK
+import csv
 
-image = expansion.load_image("startmenu.png")
-eng = Engine()
+image = load_image("startmenu.png")
 
 
 def company_game():
@@ -27,6 +25,10 @@ def start_menu():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
+
+                from InfinityMode import infinity_game
+                from Engine import eng, statictics
+
                 click_data = {(range(15, 435), range(345, 480)): (
                     infinity_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
                     (range(1650, 1920), range(895, 1025)): (exit_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
@@ -37,10 +39,10 @@ def start_menu():
                         for func in click_data[i]:
                             if func:
                                 func()
-        expansion.SCREEN.fill('black')
-        expansion.SCREEN.blit(image, (0, 0))
+        SCREEN.fill('black')
+        SCREEN.blit(image, (0, 0))
         pygame.display.flip()
-        expansion.CLOCK.tick(10)
+        CLOCK.tick(10)
 
 
 start_menu()

@@ -1,5 +1,7 @@
+import time
+
 import pygame, os, sys
-from random import randint
+from random import randint, choice
 
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
@@ -27,13 +29,25 @@ def load_image(name, colorkey=None):
     return image
 
 
-wave_image = load_image('waves_1.png')
-
-
 def switching_waves(cur_wave, creepe):
-    creepe = creepe * cur_wave + 3
-    SCREEN.blit(wave_image, (760, 200))
-    num = font.render(str(cur_wave), False, '#880015')
-    SCREEN.blit(num, (840, 220))
+
+    from Units import creepe_group, SwordMan, Archer
+    from Weapons import Saber, CavalrySword, Dagger, Bow
+    from InfinityMode import player
+
+    creepe = creepe * cur_wave
+
     for i in range(creepe):
-        creepe_group.add(Units.SwordMan(randint(100, WIDTH - 100), randint(1620, 1920)))
+        ch = randint(0, 1)
+        if not ch:
+            Sw_man = SwordMan(randint(100, WIDTH - 100), randint(100, HEIGHT - 100),
+                                      choice([Dagger, Saber, CavalrySword])())
+            Sw_man.set_player(player)
+            creepe_group.add(Sw_man)
+        else:
+            Arc = Archer(randint(100, WIDTH - 100), randint(100, HEIGHT - 100), Bow())
+            Arc.set_player(player)
+            creepe_group.add(Arc)
+    creepe_group.draw(SCREEN)
+    creepe_group.update()
+    pygame.display.flip()

@@ -1,20 +1,26 @@
+import time
+
 import pygame
-import expansion
-import Units
 import csv
 import pygame.font
 
+from expansion import SCREEN
+
 pygame.mixer.init()
 pygame.font.init()
+
+import expansion
+
 image1 = expansion.load_image("stats.png")
+slashes_images = [pygame.transform.scale(expansion.load_image('slash_down.png'), (200, 140)),
+                  pygame.transform.scale(expansion.load_image('slash_up.png'), (200, 140)),
+                  pygame.transform.scale(expansion.load_image('slash_right.png'), (140, 200)),
+                  pygame.transform.scale(expansion.load_image('slash_left.png'), (140, 200))]
 
 
 class Engine:
     def __init__(self):
-        self.kills = 0
-        self.damage = 0
-        self.deaths = 0
-        self.hits = 0
+        pass
 
     def music(self, songs):
         for i in songs:
@@ -24,49 +30,55 @@ class Engine:
         pygame.mixer.music.set_volume(0)
 
     def damage_collides(self, weapon, dir, who, creeps):
-        data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance),
-                           'down': (-(weapon.attack_distance // 4), 116),
-                           'left': (-weapon.attack_distance, -(weapon.attack_distance // 4)),
-                           'right': (84, -(weapon.attack_distance // 4))}
-        divs = data_player_dir[dir]
-        hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1], weapon.attack_distance, weapon.attack_distance)
+        data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
+                           'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
+                           'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
+                           'right': (84, -(weapon.attack_distance // 4), slashes_images[2])}
+        damage, kills, hits, deaths = 0, 0, 0, 0
+
+        from Units import Player, player_group
+
+        divs = data_player_dir[dir][:2]
+        hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1],
+                                    weapon.attack_distance * 2, weapon.attack_distance * 2)
+        FLAG_SLASH_TIME = 35
+        while FLAG_SLASH_TIME != 0:
+            expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1] - 10))
+            pygame.display.flip()
+            FLAG_SLASH_TIME -= 1
         for unit in creeps:
             if hitbox_weapon.colliderect(unit.rect):
                 if unit.hp - weapon.damage <= 0:
-                    unit.hp = 0
+                    unit.weapon.kill()
                     unit.kill()
-                    if len(Units.creepe_group) == 0:
-                        Units.wave += 1
-                        expansion.switching_waves(expansion.wave, 3)
-                    if isinstance(unit, Units.Player):
-                        self.deaths += 1
-                        Units.player_group.pop(unit)
+                    if isinstance(unit, Player):
+                        deaths += 1
+                        player_group.pop(unit)
                         statictics('end_game')
                     else:
-                        self.kills += 1
-                        self.hits += 1
-                        self.damage += unit.hp
+                        kills += 1
+                        hits += 1
+                        damage += unit.hp
                 else:
                     unit.hp -= weapon.damage
-                    self.damage += weapon.damage
-                    self.hits += 1
-        self.update_stats('all_time')
-        self.update_stats('one_game')
+                    damage += weapon.damage
+                    hits += 1
+        self.update_stats('all_time', damage, deaths, hits, kills)
+        self.update_stats('one_game', damage, deaths, hits, kills)
 
-    def update_stats(self, param):
+    def update_stats(self, param, damage, deaths, hits, kills):
         data_files = {'all_time': 'stats.csv',
                       'one_game': 'stats_one_game.csv'}
         with open(data_files[param], mode='rt') as file:
-            temp = csv.reader(file, delimiter=';', quotechar='"')
-            for index, row in enumerate(temp):
-                print(row)
-            temp = sorted(temp, key=lambda x: int(x[1]))
-            data = [self.damage, self.kills, self.deaths, self.hits]
+            temp = list(csv.reader(file, delimiter=';', quotechar='"'))
+            data = [damage, kills, deaths, hits]
+            temp = [value for value in temp if value]
             for row in range(len(temp)):
-                temp[row][1] += data[row]
+                temp[row][1] = str(int(temp[row][1]) + data[row])
+        with open(data_files[param], mode='wt') as file:
             writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-            for i in range(len(temp)):
-                writer.writerow(temp[i])
+            for row in temp:
+                writer.writerow(row)
 
 
 font = pygame.font.SysFont('Comic Sans MS', 27)
@@ -89,9 +101,18 @@ def statictics(param=None):
                     event.pos[0] in range(855, 980) and event.pos[1] in range(620, 685):
                 run = False
         expansion.SCREEN.blit(image1, (400, 300))
-        with open(data_files[param], mode='rt') as file:
+        with open(data_files[param], mode='rt', encoding='utf-8') as file:
             data = list(csv.reader(file, delimiter=';', quotechar='"'))
+            data = [value for value in data if value]
             for stat in data:
                 num = font.render(str(stat[1]), False, '#880015')
                 expansion.SCREEN.blit(num, (data_coords[stat[0]]))
         pygame.display.flip()
+        if param is not None:
+            with open(data_files[param], mode='wt') as file:
+                writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+                for row in range(len(data)):
+                    data[row][1] = '0'
+                writer.writerows(data)
+
+
