@@ -130,19 +130,41 @@ class Enemy(pygame.sprite.Sprite):
             self.weapon.move(self.rect.x, self.rect.y)
 
     def move_logic(self, dx, dy):
-        if dx > 0:
+        if dx > 30:
             self.x_speed += self.acceleration
-        if dx < 0:
+        if dx < -30:
             self.x_speed -= self.acceleration
-        if dy > 0:
+        if dy > 30:
             self.y_speed += self.acceleration
-        if dy < 0:
+        if dy < -30:
             self.y_speed -= self.acceleration
+
+        attack_range = 25
+
+        if not hasattr(self, 'attacked'):
+            self.attacked = False
+
+        if abs(dx) > attack_range or abs(dy) > attack_range:
+            if not self.attacked:
+                if abs(dx) > abs(dy):
+                    if dx > attack_range:
+                        eng.damage_collides(self.weapon, 'right', self, player_group)
+                    elif dx < -attack_range:
+                        eng.damage_collides(self.weapon, 'left', self, player_group)
+                else:
+                    if dy > attack_range:
+                        eng.damage_collides(self.weapon, 'down', self, player_group)
+                    elif dy < -attack_range:
+                        eng.damage_collides(self.weapon, 'up', self, player_group)
+
+                self.attacked = True
+        else:
+            self.attacked = False
 
 
 class SwordMan(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, sword_man, 0.6, 0.005, 0.8, 100, weapon)
+        super().__init__(pos_x, pos_y, sword_man, 0.4, 0.005, 0.8, 100, weapon)
 
 
 class Archer(Enemy):
@@ -152,7 +174,7 @@ class Archer(Enemy):
     def move_logic(self, dx, dy):
         screen_rect = SCREEN.get_rect()
 
-        if abs(dx) > 500:
+        if abs(dx) > 300:
             if dx > 0:
                 self.x_speed += self.acceleration
             if dx < 0:
@@ -162,12 +184,12 @@ class Archer(Enemy):
                 self.x_speed -= self.acceleration
             if dx < 0:
                 self.x_speed += self.acceleration
-        if abs(dy) > 500:
+        if abs(dy) > 300:
             if dy > 0:
                 self.y_speed += self.acceleration
             if dy < 0:
                 self.y_speed -= self.acceleration
-        elif 500 > abs(dy) > 0:
+        elif 300 > abs(dy) > 0:
             if dy > 0:
                 self.y_speed -= self.acceleration
             if dy < 0:
