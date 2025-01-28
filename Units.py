@@ -39,17 +39,13 @@ class Player(pygame.sprite.Sprite):
             self.y_speed += self.acceleration
             self.last_button = pygame.K_DOWN
         if self.last_button == pygame.K_LEFT and mb_down:
-            eng.damage_collides(self.weapon, 'left', self, creepe_group)
-            print(self.last_button)
+            eng.damage_collides(self.weapon, 'left', self, creepe_group, False)
         elif self.last_button == pygame.K_RIGHT and mb_down:
-            eng.damage_collides(self.weapon, 'right', self, creepe_group)
-            print(self.last_button)
+            eng.damage_collides(self.weapon, 'right', self, creepe_group, False)
         elif self.last_button == pygame.K_UP and mb_down:
-            eng.damage_collides(self.weapon, 'up', self, creepe_group)
-            print(self.last_button)
+            eng.damage_collides(self.weapon, 'up', self, creepe_group, False)
         elif self.last_button == pygame.K_DOWN and mb_down:
-            eng.damage_collides(self.weapon, 'down', self, creepe_group)
-            print(self.last_button)
+            eng.damage_collides(self.weapon, 'down', self, creepe_group, False)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
@@ -148,14 +144,14 @@ class Enemy(pygame.sprite.Sprite):
             if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
                     if dx > attack_range:
-                        eng.damage_collides(self.weapon, 'right', self, player_group)
+                        eng.damage_collides(self.weapon, 'right', self, player_group, False)
                     elif dx < -attack_range:
-                        eng.damage_collides(self.weapon, 'left', self, player_group)
+                        eng.damage_collides(self.weapon, 'left', self, player_group, False)
                 else:
                     if dy > attack_range:
-                        eng.damage_collides(self.weapon, 'down', self, player_group)
+                        eng.damage_collides(self.weapon, 'down', self, player_group, False)
                     elif dy < -attack_range:
-                        eng.damage_collides(self.weapon, 'up', self, player_group)
+                        eng.damage_collides(self.weapon, 'up', self, player_group, False)
                 self.weapon.reloads = True
                 self.attacked = True
         else:

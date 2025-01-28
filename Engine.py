@@ -4,8 +4,6 @@ import pygame
 import csv
 import pygame.font
 
-from expansion import SCREEN
-
 pygame.mixer.init()
 pygame.font.init()
 
@@ -30,7 +28,7 @@ class Engine:
         pygame.mixer.music.set_volume(0)
 
     def damage_collides(self, weapon, dir, who, creeps, arrow_or_not):
-        from Units import Player, player_group
+        from Units import Player
         from InfinityMode import player
 
         damage, kills, hits, deaths = 0, 0, 0, 0
@@ -71,6 +69,7 @@ class Engine:
                 player.weapon.kill()
                 player.kill()
                 deaths += 1
+            weapon.kill()
 
 
 
@@ -111,6 +110,8 @@ def statictics(param=None):
             elif event.type == pygame.MOUSEBUTTONDOWN and \
                     event.pos[0] in range(855, 980) and event.pos[1] in range(620, 685):
                 run = False
+                from main_menu import start_menu
+                start_menu()
         expansion.SCREEN.blit(image1, (400, 300))
         with open(data_files[param], mode='rt', encoding='utf-8') as file:
             data = list(csv.reader(file, delimiter=';', quotechar='"'))

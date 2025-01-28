@@ -47,10 +47,8 @@ class Bow(Weapon):
 
 
 class Arrow(pygame.sprite.Sprite):
-    def __init__(self, image, bow_x, bow_y, player_x, player_y):
+    def __init__(self, bow_x, bow_y, player_x, player_y):
         super().__init__(arrow_group, all_sprites)
-
-        from Engine import eng
 
         self.image = pygame.transform.scale(load_image('Arrow.png'), (150, 150))
         self.rect = self.image.get_rect()
@@ -71,6 +69,7 @@ class Arrow(pygame.sprite.Sprite):
         self.bow_y += self.y_speed
 
         from expansion import SCREEN
+        from Engine import eng
 
         self.rect.x = int(self.bow_x)
         self.rect.y = int(self.bow_y)

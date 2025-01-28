@@ -3,6 +3,8 @@ import time
 import pygame, os, sys
 from random import randint, choice
 
+from click import clear
+
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
@@ -51,3 +53,18 @@ def switching_waves(cur_wave, creepe):
     creepe_group.draw(SCREEN)
     creepe_group.update()
     pygame.display.flip()
+
+def clear_groups(company):
+    from Units import creepe_group, weapon_group, arrow_group, player_group
+
+    for i in creepe_group:
+        i.kill()
+
+    for i in arrow_group:
+        i.kill()
+    if company:
+        for i in player_group:
+            i.kill()
+
+        for i in weapon_group:
+            i.kill()

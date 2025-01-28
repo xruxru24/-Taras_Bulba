@@ -1,6 +1,6 @@
 import pygame, os, sys
 
-from Units import creepe_group, weapon_group
+import expansion
 from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
@@ -42,6 +42,7 @@ class SaleSpot:
 
 def infinity_game():
     run = True
+    expansion.clear_groups(False)
 
     field_sprite = pygame.sprite.Group()
     field = pygame.sprite.Sprite()
@@ -77,7 +78,7 @@ def infinity_game():
                 player.weapon.cooldown = player.weapon.reload * 600
             player.weapon.cooldown -= 1
 
-        for i in weapon_group:
+        for i in Units.weapon_group:
             if i.reloads:
                 if i.cooldown - 1 == 0:
                     i.reloads = False
@@ -117,7 +118,7 @@ def infinity_game():
         Units.creepe_group.draw(SCREEN)
         Units.weapon_group.draw(SCREEN)
 
-        if len(creepe_group) == 0:
+        if len(Units.creepe_group) == 0:
             SCREEN.blit(wave_image, (760, 200))
             num = font.render(str(cur_wave), False, '#880015')
             SCREEN.blit(num, (940, 220))

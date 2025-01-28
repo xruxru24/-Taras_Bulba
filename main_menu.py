@@ -1,7 +1,7 @@
 import pygame
 import sys
 from expansion import load_image, SCREEN, CLOCK
-from CompanyMode import company_game
+from CompanyMode import company_game_menu
 
 image = load_image("startmenu.png")
 image_1 = load_image("company_mode_menu.png")
@@ -24,7 +24,7 @@ def start_menu():
     click_data = {(range(15, 435), range(345, 480)): (
         infinity_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
         (range(1650, 1920), range(895, 1025)): (exit_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
-        (range(15, 435), range(175, 315)): (company_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
+        (range(15, 435), range(175, 315)): (company_game_menu, eng.music(('song_1.mp3', 'song_2.mp3'))),
         (range(15, 435), range(525, 655)): (statictics, eng.music(('song_1.mp3', 'song_2.mp3')))}
     while run:
         for event in pygame.event.get():
