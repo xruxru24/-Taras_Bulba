@@ -145,7 +145,7 @@ class Enemy(pygame.sprite.Sprite):
             self.attacked = False
 
         if abs(dx) > attack_range or abs(dy) > attack_range:
-            if not self.attacked:
+            if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
                     if dx > attack_range:
                         eng.damage_collides(self.weapon, 'right', self, player_group)
@@ -156,7 +156,7 @@ class Enemy(pygame.sprite.Sprite):
                         eng.damage_collides(self.weapon, 'down', self, player_group)
                     elif dy < -attack_range:
                         eng.damage_collides(self.weapon, 'up', self, player_group)
-
+                self.weapon.reloads = True
                 self.attacked = True
         else:
             self.attacked = False
@@ -221,6 +221,7 @@ player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 creepe_group = pygame.sprite.Group()
 weapon_group = pygame.sprite.Group()
+arrow_group = pygame.sprite.Group()
 
 
 

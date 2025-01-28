@@ -29,41 +29,51 @@ class Engine:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
 
-    def damage_collides(self, weapon, dir, who, creeps):
-        data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
-                           'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
-                           'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
-                           'right': (84, -(weapon.attack_distance // 4), slashes_images[2])}
+    def damage_collides(self, weapon, dir, who, creeps, arrow_or_not):
+        from Units import Player, player_group
+        from InfinityMode import player
+
         damage, kills, hits, deaths = 0, 0, 0, 0
 
-        from Units import Player, player_group
-
-        divs = data_player_dir[dir][:2]
-        hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1],
-                                    weapon.attack_distance * 2, weapon.attack_distance * 2)
-        FLAG_SLASH_TIME = 35
-        while FLAG_SLASH_TIME != 0:
-            expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1] - 10))
-            pygame.display.flip()
-            FLAG_SLASH_TIME -= 1
-        for unit in creeps:
-            if hitbox_weapon.colliderect(unit.rect):
-                if unit.hp - weapon.damage <= 0:
-                    unit.weapon.kill()
-                    unit.kill()
-                    if isinstance(unit, Player):
-                        deaths += 1
+        if not arrow_or_not:
+            data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
+                               'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
+                               'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
+                               'right': (84, -(weapon.attack_distance // 4), slashes_images[2])}
+            divs = data_player_dir[dir][:2]
+            hitbox_weapon = pygame.Rect(who.pos_x + divs[0], who.pos_y + divs[1],
+                                        weapon.attack_distance * 2, weapon.attack_distance * 2)
+            FLAG_SLASH_TIME = 35
+            while FLAG_SLASH_TIME != 0:
+                expansion.SCREEN.blit(data_player_dir[dir][-1], (who.pos_x + divs[0], who.pos_y + divs[1] - 10))
+                pygame.display.flip()
+                FLAG_SLASH_TIME -= 1
+            for unit in creeps:
+                if hitbox_weapon.colliderect(unit.rect):
+                    if unit.hp - weapon.damage <= 0:
                         unit.weapon.kill()
                         unit.kill()
-                        statictics('end_game')
+                        if isinstance(unit, Player):
+                            deaths += 1
+                            unit.weapon.kill()
+                            unit.kill()
+                            statictics('end_game')
+                        else:
+                            kills += 1
+                            hits += 1
+                            damage += unit.hp
                     else:
-                        kills += 1
+                        unit.hp -= weapon.damage
+                        damage += weapon.damage
                         hits += 1
-                        damage += unit.hp
-                else:
-                    unit.hp -= weapon.damage
-                    damage += weapon.damage
-                    hits += 1
+        else:
+            if weapon.rect.colliderect(player.rect):
+                player.weapon.kill()
+                player.kill()
+                deaths += 1
+
+
+
         self.update_stats('all_time', damage, deaths, hits, kills)
         self.update_stats('one_game', damage, deaths, hits, kills)
 

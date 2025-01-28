@@ -1,6 +1,6 @@
 import pygame, os, sys
 
-from Units import creepe_group
+from Units import creepe_group, weapon_group
 from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
@@ -77,6 +77,13 @@ def infinity_game():
                 player.weapon.cooldown = player.weapon.reload * 600
             player.weapon.cooldown -= 1
 
+        for i in weapon_group:
+            if i.reloads:
+                if i.cooldown - 1 == 0:
+                    i.reloads = False
+                    i.cooldown = i.reload * 600
+                i.cooldown -= 1
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -102,6 +109,7 @@ def infinity_game():
         Units.all_sprites.update()
 
         Units.weapon_group.update()
+        Units.arrow_group.update()
         field_sprite.draw(SCREEN)
 
         sale_point_sprite.draw(SCREEN)
