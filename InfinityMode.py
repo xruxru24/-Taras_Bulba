@@ -60,6 +60,8 @@ def infinity_game():
     cur_wave = 1
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')
+    pigman = Units.PigMan(400, 400, Weapons.Saber())
+    pigman.set_player(player)
     K_e_counter = 0
 
     while run:
