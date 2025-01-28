@@ -194,7 +194,7 @@ from expansion import FPS, SCREEN, load_image
 
 player_image = load_image('taras.png', -1)
 sword_man = load_image('swordsman.png', -1)
-pig_man = load_image('pigman.png', -1)
+pig_man = pygame.transform.scale(load_image('pigman.png', -1), (200, 200))
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 creepe_group = pygame.sprite.Group()
