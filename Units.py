@@ -3,6 +3,7 @@ import pygame
 from Engine import eng
 
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, weapon):
         super().__init__(player_group, all_sprites)
@@ -203,6 +204,34 @@ class Archer(Enemy):
         elif self.rect.bottom > screen_rect.bottom:
             self.y_speed = -abs(self.y_speed)
             self.pos_y = screen_rect.bottom - self.rect.height
+
+        attack_range = 300
+
+        from Weapons import Arrow
+
+        if not hasattr(self, 'attacked'):
+            self.attacked = False
+
+        if abs(dx) > attack_range or abs(dy) > attack_range:
+            if not self.attacked and not self.weapon.reloads:
+                if abs(dx) > abs(dy):
+                    if dx > attack_range:
+                        x, y = self.player.get_position()
+                        Arrow(self.pos_x, self.pos_y, x, y)
+                    elif dx < -attack_range:
+                        x, y = self.player.get_position()
+                        Arrow(self.pos_x, self.pos_y, x, y)
+                else:
+                    if dy > attack_range:
+                        x, y = self.player.get_position()
+                        Arrow(self.pos_x, self.pos_y, x, y)
+                    elif dy < -attack_range:
+                        x, y = self.player.get_position()
+                        Arrow(self.pos_x, self.pos_y, x, y)
+                self.weapon.reloads = True
+                self.attacked = True
+        else:
+            self.attacked = False
 
 class PigMan(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
