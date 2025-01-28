@@ -1,7 +1,8 @@
+from random import choice
+
 import pygame
 
 from Engine import eng
-
 
 
 class Player(pygame.sprite.Sprite):
@@ -25,7 +26,6 @@ class Player(pygame.sprite.Sprite):
         self.weapon = weapon
         self.last_button = None
 
-
     def run(self, keys, mb_down):
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.x_speed -= self.acceleration
@@ -40,13 +40,13 @@ class Player(pygame.sprite.Sprite):
             self.y_speed += self.acceleration
             self.last_button = pygame.K_DOWN
         if self.last_button == pygame.K_LEFT and mb_down:
-            eng.damage_collides(self.weapon, 'left', self, creepe_group, False)
+            eng.damage_collides(self.weapon, 'left', self, creepe_group, False, False)
         elif self.last_button == pygame.K_RIGHT and mb_down:
-            eng.damage_collides(self.weapon, 'right', self, creepe_group, False)
+            eng.damage_collides(self.weapon, 'right', self, creepe_group, False, False)
         elif self.last_button == pygame.K_UP and mb_down:
-            eng.damage_collides(self.weapon, 'up', self, creepe_group, False)
+            eng.damage_collides(self.weapon, 'up', self, creepe_group, False, False)
         elif self.last_button == pygame.K_DOWN and mb_down:
-            eng.damage_collides(self.weapon, 'down', self, creepe_group, False)
+            eng.damage_collides(self.weapon, 'down', self, creepe_group, False, False)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
@@ -145,14 +145,14 @@ class Enemy(pygame.sprite.Sprite):
             if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
                     if dx > attack_range:
-                        eng.damage_collides(self.weapon, 'right', self, player_group, False)
+                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False)
                     elif dx < -attack_range:
-                        eng.damage_collides(self.weapon, 'left', self, player_group, False)
+                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False)
                 else:
                     if dy > attack_range:
-                        eng.damage_collides(self.weapon, 'down', self, player_group, False)
+                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False)
                     elif dy < -attack_range:
-                        eng.damage_collides(self.weapon, 'up', self, player_group, False)
+                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False)
                 self.weapon.reloads = True
                 self.attacked = True
         else:
@@ -207,7 +207,22 @@ class Archer(Enemy):
 
         attack_range = 300
 
-        from Weapons import Arrow
+
+class General(Enemy):
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 300, weapon)
+
+    def move_logic(self, dx, dy):
+        if dx > 30:
+            self.x_speed += self.acceleration
+        if dx < -30:
+            self.x_speed -= self.acceleration
+        if dy > 30:
+            self.y_speed += self.acceleration
+        if dy < -30:
+            self.y_speed -= self.acceleration
+
+        attack_range = 25
 
         if not hasattr(self, 'attacked'):
             self.attacked = False
@@ -216,26 +231,39 @@ class Archer(Enemy):
             if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
                     if dx > attack_range:
-                        x, y = self.player.get_position()
-                        Arrow(self.pos_x, self.pos_y, x, y)
+                        if eng.damage_collides(self.weapon, 'right', self, player_group, False, True):
+                            self.teleport()
                     elif dx < -attack_range:
-                        x, y = self.player.get_position()
-                        Arrow(self.pos_x, self.pos_y, x, y)
+                        if eng.damage_collides(self.weapon, 'left', self, player_group, False, True):
+                            self.teleport()
                 else:
                     if dy > attack_range:
-                        x, y = self.player.get_position()
-                        Arrow(self.pos_x, self.pos_y, x, y)
+                        if eng.damage_collides(self.weapon, 'down', self, player_group, False, True):
+                            self.teleport()
                     elif dy < -attack_range:
-                        x, y = self.player.get_position()
-                        Arrow(self.pos_x, self.pos_y, x, y)
+                        if eng.damage_collides(self.weapon, 'up', self, player_group, False, True):
+                            self.teleport()
                 self.weapon.reloads = True
                 self.attacked = True
         else:
             self.attacked = False
 
-class PigMan(Enemy):
-    def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 12000, weapon)
+    def teleport(self):
+
+        directions = ['left', 'right', 'up', 'down']
+        direction = choice(directions)
+
+        teleport_distance = 100
+
+        if direction == 'left':
+            self.rect.x -= teleport_distance
+        elif direction == 'right':
+            self.rect.x += teleport_distance
+        elif direction == 'up':
+            self.rect.y -= teleport_distance
+        elif direction == 'down':
+            self.rect.y += teleport_distance
+
 
 from expansion import FPS, SCREEN, load_image
 
@@ -247,7 +275,3 @@ all_sprites = pygame.sprite.Group()
 creepe_group = pygame.sprite.Group()
 weapon_group = pygame.sprite.Group()
 arrow_group = pygame.sprite.Group()
-
-
-
-

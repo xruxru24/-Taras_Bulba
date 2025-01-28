@@ -1,5 +1,5 @@
 import time
-
+from random import randint
 import pygame
 import csv
 import pygame.font
@@ -27,13 +27,16 @@ class Engine:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
 
-    def damage_collides(self, weapon, dir, who, creeps, arrow_or_not):
+    def damage_collides(self, weapon, dir, who, creeps, arrow_or_not, miss):
         from Units import Player
         from InfinityMode import player
 
         damage, kills, hits, deaths = 0, 0, 0, 0
 
         if not arrow_or_not:
+            if miss:
+                if randint(0, 10) > 8:
+                    return True
             data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
                                'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
                                'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
@@ -126,5 +129,3 @@ def statictics(param=None):
                 for row in range(len(data)):
                     data[row][1] = '0'
                 writer.writerows(data)
-
-
