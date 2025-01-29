@@ -57,7 +57,7 @@ class Engine:
                             deaths += 1
                             statictics('end_game')
                         else:
-                            if isinstance(unit, Player):
+                            if not isinstance(unit, Player):
                                 kills += 1
                                 hits += 1
                                 damage += unit.hp
@@ -108,9 +108,11 @@ def statictics(param=None):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                clear_stats(data)
             elif event.type == pygame.MOUSEBUTTONDOWN and \
                     event.pos[0] in range(855, 980) and event.pos[1] in range(620, 685):
                 run = False
+                clear_stats(data)
                 from main_menu import start_menu
                 start_menu()
         expansion.SCREEN.blit(image1, (400, 300))
@@ -121,15 +123,13 @@ def statictics(param=None):
                 num = font.render(str(stat[1]), False, '#880015')
                 expansion.SCREEN.blit(num, (data_coords[stat[0]]))
         pygame.display.flip()
-        if not data_clear[param]:
-            clear_stats(data)
 
 
 def clear_stats(params):
     with open('stats_one_game.csv', mode='wt') as file:
         writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
         for row in range(len(params)):
-            params[row][1] = '0'
+            params[row][-1] = '0'
         writer.writerows(params)
 
 
