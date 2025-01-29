@@ -1,5 +1,3 @@
-import time
-
 import pygame, os, sys
 from random import randint, choice
 
@@ -30,14 +28,18 @@ def load_image(name, colorkey=None):
 
 
 def switching_waves(cur_wave, creepe):
-
+    '''
+    Метод для переключения волн в бесконечном режиме и спавна соотвествующего кол-ва крипов на карте.
+    '''
     from Units import creepe_group, SwordMan, Archer
     from Weapons import Saber, CavalrySword, Dagger, Bow
     from InfinityMode import player
 
+    # подсчет крипов
     creepe = creepe * cur_wave
 
     for i in range(creepe):
+        # логика создания крипов
         ch = randint(0, 1)
         if not ch:
             Sw_man = SwordMan(randint(100, WIDTH - 100), randint(100, HEIGHT - 100),
@@ -53,6 +55,9 @@ def switching_waves(cur_wave, creepe):
     pygame.display.flip()
 
 def clear_groups(company):
+    '''
+    Очистка всех групп спрайтов
+    '''
     from Units import creepe_group, weapon_group, arrow_group, player_group
 
     for i in creepe_group:

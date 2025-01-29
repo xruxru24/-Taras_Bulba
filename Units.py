@@ -26,6 +26,9 @@ class Player(pygame.sprite.Sprite):
 
 
     def run(self, keys, mb_down):
+        '''
+        Метод реализует движение игрока
+        '''
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.x_speed -= self.acceleration
             self.last_button = pygame.K_LEFT
@@ -104,6 +107,9 @@ class Enemy(pygame.sprite.Sprite):
         self.hp = hp
 
     def set_player(self, player):
+        '''
+        Отслеживание игрока крипами
+        '''
         self.player = player
 
     def update(self):
@@ -126,6 +132,9 @@ class Enemy(pygame.sprite.Sprite):
             self.weapon.move(self.rect.x, self.rect.y)
 
     def move_logic(self, dx, dy):
+        '''
+        Метод реализующий атаки крипов
+        '''
         if dx > 30:
             self.x_speed += self.acceleration
         if dx < -30:
