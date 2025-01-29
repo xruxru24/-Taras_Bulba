@@ -62,9 +62,10 @@ def clear_groups(company):
 
     for i in arrow_group:
         i.kill()
+
+    for i in weapon_group:
+        i.kill()
+
     if company:
         for i in player_group:
-            i.kill()
-
-        for i in weapon_group:
             i.kill()

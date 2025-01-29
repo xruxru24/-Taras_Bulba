@@ -1,6 +1,7 @@
 import pygame
 
-from Units import weapon_group, all_sprites, arrow_group, creepe_group
+import expansion
+from Units import weapon_group, all_sprites, arrow_group
 from expansion import load_image
 
 
@@ -50,14 +51,14 @@ class Arrow(pygame.sprite.Sprite):
     def __init__(self, bow_x, bow_y, player_x, player_y):
         super().__init__(arrow_group, all_sprites)
 
-        self.image = pygame.transform.scale(load_image('Arrow.png'), (150, 150))
+        self.image = pygame.transform.scale(load_image('Arrow.png'), (75, 75))
         self.rect = self.image.get_rect()
         self.damage = 100
         self.attack_distance = 540
         self.bow_x = bow_x
         self.bow_y = bow_y
-        self.x_speed = 0.4
-        self.y_speed = 0.4
+        self.x_speed = 1
+        self.y_speed = 1
 
         self.player_x, self.player_y = player_x, player_y
         self.rect.move_ip(bow_x, bow_y)
@@ -65,13 +66,20 @@ class Arrow(pygame.sprite.Sprite):
 
     def update(self):
 
-        self.bow_x += self.x_speed
-        self.bow_y += self.y_speed
+        if self.bow_x + self.x_speed > expansion.WIDTH or self.bow_y + self.y_speed > expansion.HEIGHT:
+            self.kill()
 
-        from expansion import SCREEN
-        from Engine import eng
+        else:
+            if self.bow_x < self.player_x:
+                self.bow_x += self.x_speed
+            else:
+                self.bow_x -= self.x_speed
+            if self.bow_y < self.player_y:
+                self.bow_y += self.y_speed
+            else:
+                self.bow_y -= self.y_speed
 
-        self.rect.x = int(self.bow_x)
-        self.rect.y = int(self.bow_y)
-        self.rect.clamp_ip(SCREEN.get_rect())
-        eng.damage_collides(Arrow, None, None, None, True)
+            from Engine import eng
+
+            self.rect.move_ip(int(self.bow_x), int(self.bow_y))
+            eng.damage_collides(self, None, None, None, True, False)

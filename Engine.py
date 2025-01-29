@@ -1,4 +1,3 @@
-import time
 from random import randint
 import pygame
 import csv
@@ -68,6 +67,7 @@ class Engine:
                         damage += weapon.damage
                         hits += 1
         else:
+            print(weapon.bow_x, weapon.bow_y, player.get_position())
             if weapon.rect.colliderect(player.rect):
                 player.weapon.kill()
                 player.kill()

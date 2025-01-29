@@ -7,7 +7,6 @@ import Weapons
 import Units
 
 pygame.font.init()
-player = Units.Player(50, 50, Weapons.Saber())
 font = pygame.font.SysFont('Comic Sans MS', 40)
 
 class SaleSpot:
@@ -41,8 +40,10 @@ class SaleSpot:
 
 
 def infinity_game():
+    global player
     run = True
     expansion.clear_groups(False)
+    player = Units.Player(50, 50, Weapons.Saber())
 
     field_sprite = pygame.sprite.Group()
     field = pygame.sprite.Sprite()
@@ -61,8 +62,6 @@ def infinity_game():
     cur_wave = 1
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')
-    pigman = Units.PigMan(400, 400, Weapons.Saber())
-    pigman.set_player(player)
     K_e_counter = 0
 
     while run:
@@ -84,6 +83,9 @@ def infinity_game():
                     i.reloads = False
                     i.cooldown = i.reload * 600
                 i.cooldown -= 1
+
+        Units.arrow_group.draw(SCREEN)
+        Units.arrow_group.update()
 
 
         for event in pygame.event.get():
@@ -108,9 +110,9 @@ def infinity_game():
         player.run(keys, mb_down)
         Units.player_group.update()
         Units.all_sprites.update()
+        Units.arrow_group.update()
 
         Units.weapon_group.update()
-        Units.arrow_group.update()
         field_sprite.draw(SCREEN)
 
         sale_point_sprite.draw(SCREEN)

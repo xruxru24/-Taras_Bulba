@@ -207,6 +207,21 @@ class Archer(Enemy):
 
         attack_range = 300
 
+        from Weapons import Arrow
+
+        if not hasattr(self, 'attacked'):
+            self.attacked = False
+
+        if abs(dx) > attack_range or abs(dy) > attack_range:
+            if not self.attacked and not self.weapon.reloads:
+                b_x, b_y = int(self.pos_x), int(self.pos_y)
+                p_x, p_y = self.player.get_position()
+                Arrow(b_x, b_y, p_x, p_y)
+                self.weapon.reloads = True
+                self.attacked = True
+        else:
+            self.attacked = False
+
 
 class General(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
