@@ -1,7 +1,6 @@
 import pygame, os, sys
 from random import randint, choice
 
-
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
@@ -43,7 +42,7 @@ def switching_waves(cur_wave, creepe, player):
         ch = randint(0, 1)
         if not ch:
             Sw_man = SwordMan(randint(100, WIDTH - 100), randint(100, HEIGHT - 100),
-                                      choice([Dagger, Saber, CavalrySword])())
+                              choice([Dagger, Saber, CavalrySword])())
             Sw_man.set_player(player)
             creepe_group.add(Sw_man)
         else:
@@ -55,6 +54,7 @@ def switching_waves(cur_wave, creepe, player):
     creepe_group.update()
     arrow_group.update()
     pygame.display.flip()
+
 
 def clear_groups(company):
     '''

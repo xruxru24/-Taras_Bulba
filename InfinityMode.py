@@ -1,8 +1,7 @@
-import pygame, os, sys
+import pygame, sys
 
 import expansion
-from Units import arrow_group
-from Weapons import Dagger, Saber, CavalrySword, Arrow
+from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
 import Units
@@ -10,11 +9,11 @@ import Units
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 40)
 
+
 class SaleSpot:
     def __init__(self):
         self.items = {Dagger: 15, Saber: 30, CavalrySword: 45}
         self.flag = False
-
 
     def update(self):
         '''
@@ -27,8 +26,8 @@ class SaleSpot:
         Логика покупок
         '''
         click_data = {(range(500, 722), range(575, 767)): CavalrySword,
-            (range(723, 996), range(575, 767)): Dagger,
-            (range(1000, 1200), range(575, 767)): Saber}
+                      (range(723, 996), range(575, 767)): Dagger,
+                      (range(1000, 1200), range(575, 767)): Saber}
 
         s = 1000
 
@@ -97,6 +96,8 @@ def infinity_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN and not SALE_SPOT.flag:
                 if player.weapon.reloads:
                     mb_down = False
@@ -141,11 +142,11 @@ def infinity_game():
         SCREEN.blit(cash, (0, 1000))
 
         fst = 400
-        for i in ['Press to move: WASD', 'Press to attack: LMB', 'Press to dash: Space', 'Press to buy: E']:
+        for i in ['Press to move: WASD', 'Press to attack: LMB', 'Press to dash: Space', 'Press to buy: E',
+                  'Press to leave: Escape']:
             o = font.render(i, False, 'Black')
             fst += 100
             SCREEN.blit(o, (0, fst))
-
 
         if K_e_counter % 2 != 0 and FLAG_WAVE_TIME != 6000:
             SALE_SPOT.update()

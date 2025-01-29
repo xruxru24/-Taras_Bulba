@@ -3,7 +3,6 @@ import pygame
 import csv
 import pygame.font
 
-
 pygame.mixer.init()
 pygame.font.init()
 
@@ -34,7 +33,6 @@ class Engine:
         а также вызывает метод обновления статистики.
         '''
         from Units import Player
-        from InfinityMode import player
 
         # параметры статистики(урон, убийства, попадания, смерти)
         damage, kills, hits, deaths = 0, 0, 0, 0

@@ -175,7 +175,7 @@ class SwordMan(Enemy):
 
 class Archer(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, sword_man, 0.3, 0.005, 0.8, 1, weapon)
+        super().__init__(pos_x, pos_y, archer, 0.3, 0.005, 0.8, 1, weapon)
 
     def move_logic(self, dx, dy):
         screen_rect = SCREEN.get_rect()
@@ -221,13 +221,13 @@ class Archer(Enemy):
             if not self.weapon.reloads:
                 b_x, b_y = int(self.pos_x), int(self.pos_y)
                 p_x, p_y = self.player.get_position()
-                Arrow(b_x, b_y, p_x , p_y, self.player)
+                Arrow(b_x, b_y, p_x, p_y, self.player)
                 self.weapon.reloads = True
 
 
 class General(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 400, weapon)
+        super().__init__(pos_x, pos_y, gener, 0.4, 0.001, 0.8, 400, weapon)
         self.teleport_cooldown = 0
         self.teleport_cooldown_time = 3
         self.is_teleporting = False
@@ -269,7 +269,7 @@ class General(Enemy):
 
 class Andrey(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 1500, weapon)
+        super().__init__(pos_x, pos_y, andr, 0.4, 0.001, 0.8, 1500, weapon)
         self.rage_cooldown = 6000
         self.rage_duration = 1800
         self.rage_flag = False
@@ -366,11 +366,13 @@ class PigMan(Enemy):
             self.attacked = False
 
 
-
 from expansion import FPS, SCREEN, load_image
 
 player_image = load_image('taras.png', -1)
-sword_man = load_image('swordsman.png', -1)
+sword_man = load_image('swordsman.png')
+archer = load_image('Archer.png')
+gener = pygame.transform.scale(load_image('General.png'), (160, 305))
+andr = load_image('Andrey.png')
 pig_man = pygame.transform.scale(load_image('pigman.png', -1), (200, 200))
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()

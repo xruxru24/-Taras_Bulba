@@ -1,13 +1,11 @@
-import pygame, os, sys
+import pygame, sys
 from expansion import SCREEN, clear_groups
-from Units import Player, weapon_group, player_group, all_sprites, arrow_group, creepe_group, General, Andrey, PigMan
+from Units import Player, weapon_group, player_group, all_sprites, arrow_group, creepe_group, Andrey, PigMan
 from Weapons import Saber, Axe
 from expansion import load_image
 
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 40)
-
-
 
 image_1 = load_image("company_mode_menu.png")
 
@@ -21,9 +19,9 @@ def company_game_menu():
 
     # словарь реализиции кнопок
     click_data = {(range(140, 610), range(145, 900)): 'Свиноподобный',
-        (range(720, 1200), range(145, 900)): 'Войцех',
-        (range(1290, 1745), range(145, 900)): 'Андрий',
-        (range(1655, 1890), range(20, 95)): None}
+                  (range(720, 1200), range(145, 900)): 'Войцех',
+                  (range(1290, 1745), range(145, 900)): 'Андрий',
+                  (range(1655, 1890), range(20, 95)): None}
     run = True
     while run:
         for event in pygame.event.get():
@@ -49,12 +47,12 @@ def company_game(boss):
     clear_groups(True)
 
     boss_locations = {'Свиноподобный': 'company_mode_1st_boss.png',
-                     'Войцех': 'company_mode_2nd_boss.png',
-                     'Андрий': 'company_mode_3rd_boss.png'}
+                      'Войцех': 'company_mode_2nd_boss.png',
+                      'Андрий': 'company_mode_3rd_boss.png'}
 
     boss_units = {'Свиноподобный': PigMan,
-                     'Войцех': General,
-                     'Андрий': Andrey}
+                  'Войцех': General,
+                  'Андрий': Andrey}
 
     boss_location = load_image(boss_locations[boss])
     field_sprite = pygame.sprite.Group()
@@ -90,7 +88,6 @@ def company_game(boss):
                 else:
                     gen_bos.rage_cooldown -= 1
 
-
         for i in weapon_group:
             if i.reloads:
                 if i.cooldown - 1 == 0:
@@ -100,6 +97,8 @@ def company_game(boss):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if player.weapon.reloads:
@@ -128,7 +127,7 @@ def company_game(boss):
         SCREEN.blit(boss_hp, (990, 0))
 
         fst = 400
-        for i in ['Press to move: WASD', 'Press to attack: LMB', 'Press to dash: Space']:
+        for i in ['Press to move: WASD', 'Press to attack: LMB', 'Press to dash: Space', 'Press to leave: Escape']:
             o = font.render(i, False, 'Black')
             fst += 100
             SCREEN.blit(o, (0, fst))

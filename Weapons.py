@@ -1,6 +1,5 @@
 import pygame
 
-import expansion
 from Units import weapon_group, all_sprites, arrow_group
 from expansion import load_image
 
@@ -49,6 +48,7 @@ class Axe(Weapon):
         self.image = pygame.transform.scale(load_image('Axe.png'), (50, 50))
         super().__init__(self.image, -10, 10, 40, 100, 8)
 
+
 class Bow(Weapon):
     def __init__(self):
         self.image = pygame.transform.scale(load_image('Bow.png'), (125, 125))
@@ -72,16 +72,15 @@ class Arrow(pygame.sprite.Sprite):
         self.player_x, self.player_y = player_x, player_y
         self.rect.move_ip(bow_x, bow_y)
 
-
     def update(self):
-            if self.bow_x < self.player_x:
-                self.rect = self.rect.move(self.x_speed, 0)
-            else:
-                self.rect = self.rect.move(-self.x_speed, 0)
-            if self.bow_y < self.player_y:
-                self.rect = self.rect.move(0, self.y_speed)
-            else:
-                self.rect = self.rect.move(0, -self.y_speed)
+        if self.bow_x < self.player_x:
+            self.rect = self.rect.move(self.x_speed, 0)
+        else:
+            self.rect = self.rect.move(-self.x_speed, 0)
+        if self.bow_y < self.player_y:
+            self.rect = self.rect.move(0, self.y_speed)
+        else:
+            self.rect = self.rect.move(0, -self.y_speed)
 
-            from Engine import eng
-            eng.damage_collides(self, None, None, None, True, False, self.player)
+        from Engine import eng
+        eng.damage_collides(self, None, None, None, True, False, self.player)
