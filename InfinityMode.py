@@ -1,6 +1,7 @@
 import pygame, os, sys
 
 import expansion
+from Units import arrow_group
 from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
@@ -66,6 +67,12 @@ def infinity_game():
 
     while run:
         mb_down = False
+
+        Units.arrow_group.draw(SCREEN)
+        Units.arrow_group.update()
+
+        if len(Units.arrow_group) > 0:
+            print(Units.arrow_group)
         if FLAG_WAVE_TIME == 0:
             FLAG_WAVE_TIME = 6000
             cur_wave += 1
@@ -83,10 +90,6 @@ def infinity_game():
                     i.reloads = False
                     i.cooldown = i.reload * 600
                 i.cooldown -= 1
-
-        Units.arrow_group.draw(SCREEN)
-        Units.arrow_group.update()
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

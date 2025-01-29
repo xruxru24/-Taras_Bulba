@@ -3,8 +3,6 @@ import time
 import pygame, os, sys
 from random import randint, choice
 
-from click import clear
-
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
