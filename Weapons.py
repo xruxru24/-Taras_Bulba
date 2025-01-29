@@ -41,6 +41,11 @@ class Dagger(Weapon):
         super().__init__(self.image, -10, 10, 20, 30, 0.5)
 
 
+class Axe(Weapon):
+    def __init__(self):
+        self.image = pygame.transform.scale(load_image('Axe.png'), (50, 50))
+        super().__init__(self.image, -10, 10, 40, 100, 8)
+
 class Bow(Weapon):
     def __init__(self):
         self.image = pygame.transform.scale(load_image('Bow.png'), (125, 125))
@@ -48,7 +53,7 @@ class Bow(Weapon):
 
 
 class Arrow(pygame.sprite.Sprite):
-    def __init__(self, bow_x, bow_y, player_x, player_y):
+    def __init__(self, bow_x, bow_y, player_x, player_y, player):
         super().__init__(arrow_group, all_sprites)
 
         self.image = pygame.transform.scale(load_image('Arrow.png'), (75, 75))
@@ -59,6 +64,7 @@ class Arrow(pygame.sprite.Sprite):
         self.bow_y = bow_y
         self.x_speed = 1
         self.y_speed = 1
+        self.player = player
 
         self.player_x, self.player_y = player_x, player_y
         self.rect.move_ip(bow_x, bow_y)
@@ -75,4 +81,4 @@ class Arrow(pygame.sprite.Sprite):
                 self.rect = self.rect.move(0, -self.y_speed)
 
             from Engine import eng
-            eng.damage_collides(self, None, None, None, True, False)
+            eng.damage_collides(self, None, None, None, True, False, self.player)

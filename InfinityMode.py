@@ -59,7 +59,7 @@ def infinity_game():
     sale_point_sprite.add(sale_point)
 
     SALE_SPOT = SaleSpot()
-    switching_waves(1, 3)
+    switching_waves(1, 3, player)
     cur_wave = 1
     FLAG_WAVE_TIME = 6000
     wave_image = load_image('waves_1.png')
@@ -70,7 +70,7 @@ def infinity_game():
         if FLAG_WAVE_TIME == 0:
             FLAG_WAVE_TIME = 6000
             cur_wave += 1
-            switching_waves(cur_wave, 3)
+            switching_waves(cur_wave, 3, player)
 
         if player.weapon.reloads:
             if player.weapon.cooldown - 1 == 0:
@@ -130,6 +130,12 @@ def infinity_game():
 
         cash = font.render(f'Money: {player.money}', False, 'Black')
         SCREEN.blit(cash, (0, 1000))
+
+        fst = 400
+        for i in ['Press to move: WASD', 'Press to attack: LMB', 'Press to dash: Space', 'Press to buy: E']:
+            o = font.render(i, False, 'Black')
+            fst += 100
+            SCREEN.blit(o, (0, fst))
 
 
         if K_e_counter % 2 != 0 and FLAG_WAVE_TIME != 6000:

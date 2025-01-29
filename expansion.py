@@ -30,11 +30,10 @@ def load_image(name, colorkey=None):
     return image
 
 
-def switching_waves(cur_wave, creepe):
+def switching_waves(cur_wave, creepe, player):
 
     from Units import creepe_group, SwordMan, Archer, arrow_group
     from Weapons import Saber, CavalrySword, Dagger, Bow
-    from InfinityMode import player
 
     creepe = creepe * cur_wave
 
@@ -49,6 +48,7 @@ def switching_waves(cur_wave, creepe):
             Arc = Archer(randint(100, WIDTH - 100), randint(100, HEIGHT - 100), Bow())
             Arc.set_player(player)
             creepe_group.add(Arc)
+    player.hp += 25
     creepe_group.draw(SCREEN)
     creepe_group.update()
     arrow_group.update()

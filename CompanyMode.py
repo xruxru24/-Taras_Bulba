@@ -1,28 +1,11 @@
-from dataclasses import field
-
 import pygame, os, sys
 from expansion import SCREEN, clear_groups
-from Units import Player, weapon_group, player_group, all_sprites, arrow_group, creepe_group
-from Weapons import Saber
+from Units import Player, weapon_group, player_group, all_sprites, arrow_group, creepe_group, General, Andrey, PigMan
+from Weapons import Saber, Axe
+from expansion import load_image
 
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 40)
-
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
-
 
 image_1 = load_image("company_mode_menu.png")
 
@@ -53,11 +36,17 @@ def company_game_menu():
 
 
 def company_game(boss):
+    from Units import General
     clear_groups(True)
 
     boss_locations = {'Свиноподобный': 'company_mode_1st_boss.png',
                      'Войцех': 'company_mode_2nd_boss.png',
                      'Андрий': 'company_mode_3rd_boss.png'}
+
+    boss_units = {'Свиноподобный': PigMan,
+                     'Войцех': General,
+                     'Андрий': Andrey}
+
     boss_location = load_image(boss_locations[boss])
     field_sprite = pygame.sprite.Group()
     field = pygame.sprite.Sprite()
@@ -65,6 +54,11 @@ def company_game(boss):
     field.rect = field.image.get_rect()
     player = Player(50, 50, Saber())
     field_sprite.add(field)
+    if boss == 'Свиноподобный':
+        gen_bos = boss_units[boss](1920, 1080, Axe())
+    else:
+        gen_bos = boss_units[boss](1920, 1080, Saber())
+    gen_bos.set_player(player)
 
     run = True
     while run:
@@ -74,6 +68,19 @@ def company_game(boss):
                 player.weapon.reloads = False
                 player.weapon.cooldown = player.weapon.reload * 600
             player.weapon.cooldown -= 1
+
+        if isinstance(gen_bos, Andrey):
+            if gen_bos.rage_flag:
+                if gen_bos.rage_duration - 1 == 0:
+                    gen_bos.unrage()
+                else:
+                    gen_bos.rage_duration -= 1
+            else:
+                if gen_bos.rage_cooldown - 1 == 0:
+                    gen_bos.rage()
+                else:
+                    gen_bos.rage_cooldown -= 1
+
 
         for i in weapon_group:
             if i.reloads:
@@ -107,6 +114,20 @@ def company_game(boss):
 
         hp = font.render(f'Health: {player.hp}', False, 'Red')
         SCREEN.blit(hp, (0, 950))
+
+        boss_hp = font.render(f'Boss health: {gen_bos.hp}', False, 'Black')
+        SCREEN.blit(boss_hp, (990, 0))
+
+        fst = 400
+        for i in ['Press to move: WASD', 'Press to attack: LMB', 'Press to dash: Space']:
+            o = font.render(i, False, 'Black')
+            fst += 100
+            SCREEN.blit(o, (0, fst))
+
+        if isinstance(gen_bos, Andrey):
+            if gen_bos.rage_flag:
+                boss_rage = font.render(f'Boss in rage!', False, 'Black')
+                SCREEN.blit(boss_rage, (600, 1000))
 
         if player.weapon.reloads:
             cooldown = font.render('Can not do it now!', False, 'Black')

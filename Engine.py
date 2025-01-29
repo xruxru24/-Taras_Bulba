@@ -3,6 +3,7 @@ import pygame
 import csv
 import pygame.font
 
+
 pygame.mixer.init()
 pygame.font.init()
 
@@ -26,16 +27,12 @@ class Engine:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
 
-    def damage_collides(self, weapon, dir, who, creeps, arrow_or_not, miss):
+    def damage_collides(self, weapon, dir, who, creeps, arrow_or_not, miss, player):
         from Units import Player
-        from InfinityMode import player
 
         damage, kills, hits, deaths = 0, 0, 0, 0
 
         if not arrow_or_not:
-            if miss:
-                if randint(0, 10) > 8:
-                    return True
             data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
                                'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
                                'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
@@ -62,6 +59,7 @@ class Engine:
                             kills += 1
                             hits += 1
                             damage += unit.hp
+                            player.money += 10
                     else:
                         unit.hp -= weapon.damage
                         damage += weapon.damage
@@ -71,7 +69,6 @@ class Engine:
                 player.weapon.kill()
                 player.kill()
                 deaths += 1
-                weapon.kill()
                 statictics('end_game')
             if weapon.rect.x >= 1910 or weapon.rect.y >= 1070 or weapon.rect.x <= 0 or weapon.rect.y <= 0:
                 weapon.kill()

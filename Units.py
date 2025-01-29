@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.pos_x = float(pos_x)
         self.pos_y = float(pos_y)
         self.hp = 100
-        self.money = 100
+        self.money = 0
         self.dash_distance = 150
         self.dash_cooldown_time = 2
         self.dash_cooldown = 0
@@ -40,13 +40,13 @@ class Player(pygame.sprite.Sprite):
             self.y_speed += self.acceleration
             self.last_button = pygame.K_DOWN
         if self.last_button == pygame.K_LEFT and mb_down:
-            eng.damage_collides(self.weapon, 'left', self, creepe_group, False, False)
+            eng.damage_collides(self.weapon, 'left', self, creepe_group, False, False, self)
         elif self.last_button == pygame.K_RIGHT and mb_down:
-            eng.damage_collides(self.weapon, 'right', self, creepe_group, False, False)
+            eng.damage_collides(self.weapon, 'right', self, creepe_group, False, False, self)
         elif self.last_button == pygame.K_UP and mb_down:
-            eng.damage_collides(self.weapon, 'up', self, creepe_group, False, False)
+            eng.damage_collides(self.weapon, 'up', self, creepe_group, False, False, self)
         elif self.last_button == pygame.K_DOWN and mb_down:
-            eng.damage_collides(self.weapon, 'down', self, creepe_group, False, False)
+            eng.damage_collides(self.weapon, 'down', self, creepe_group, False, False, self)
 
         self.x_speed = max(-self.max_speed, min(self.x_speed, self.max_speed))
         self.y_speed = max(-self.max_speed, min(self.y_speed, self.max_speed))
@@ -145,14 +145,14 @@ class Enemy(pygame.sprite.Sprite):
             if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
                     if dx > attack_range:
-                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False, self.player)
                     elif dx < -attack_range:
-                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False, self.player)
                 else:
                     if dy > attack_range:
-                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False, self.player)
                     elif dy < -attack_range:
-                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False, self.player)
                 self.weapon.reloads = True
                 self.attacked = True
         else:
@@ -212,83 +212,58 @@ class Archer(Enemy):
             if not self.weapon.reloads:
                 b_x, b_y = int(self.pos_x), int(self.pos_y)
                 p_x, p_y = self.player.get_position()
-                Arrow(b_x, b_y, p_x , p_y)
+                Arrow(b_x, b_y, p_x , p_y, self.player)
                 self.weapon.reloads = True
 
 
 class General(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 300, weapon)
-        self.rage_cooldown = 500
-        self.rage_duration = 180
-        self.rage_flag = False
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 400, weapon)
+        self.teleport_cooldown = 0
+        self.teleport_cooldown_time = 3
+        self.is_teleporting = False
 
-    def move_logic(self, dx, dy):
-        if dx > 30:
-            self.x_speed += self.acceleration
-        if dx < -30:
-            self.x_speed -= self.acceleration
-        if dy > 30:
-            self.y_speed += self.acceleration
-        if dy < -30:
-            self.y_speed -= self.acceleration
+    from expansion import FPS, SCREEN
 
-        self.attack_range = 25
-
-        if not hasattr(self, 'attacked'):
-            self.attacked = False
-
-        if abs(dx) > self.attack_range or abs(dy) > self.attack_range:
-            if not self.attacked and not self.weapon.reloads:
-                if abs(dx) > abs(dy):
-                    if dx > self.attack_range:
-                        if eng.damage_collides(self.weapon, 'right', self, player_group, False, True):
-                            self.teleport()
-                    elif dx < -self.attack_range:
-                        if eng.damage_collides(self.weapon, 'left', self, player_group, False, True):
-                            self.teleport()
-                else:
-                    if dy > self.attack_range:
-                        if eng.damage_collides(self.weapon, 'down', self, player_group, False, True):
-                            self.teleport()
-                    elif dy < -self.attack_range:
-                        if eng.damage_collides(self.weapon, 'up', self, player_group, False, True):
-                            self.teleport()
-                self.weapon.reloads = True
-                self.attacked = True
-        else:
-            self.attacked = False
-
-    def rage(self):
-        if self.rage_cooldown == 0:
-            self.x_speed *= 1.5
-            self.y_speed *= 1.5
-            self.acceleration *= 1.5
-            self.max_speed *= 1.5
-            self.friction *= 1.5
-            self.attacked *= 1.5
-            self.rage_flag = True
+    def update(self):
+        super().update()
+        if self.teleport_cooldown > 0:
+            self.teleport_cooldown -= 1 / FPS
+        self.teleport()
 
     def teleport(self):
-
-        directions = ['left', 'right', 'up', 'down']
-        direction = choice(directions)
-
-        teleport_distance = 100
-
-        if direction == 'left':
-            self.rect.x -= teleport_distance
-        elif direction == 'right':
-            self.rect.x += teleport_distance
-        elif direction == 'up':
-            self.rect.y -= teleport_distance
-        elif direction == 'down':
-            self.rect.y += teleport_distance
+        if self.teleport_cooldown <= 0 and not self.is_teleporting:
+            self.is_teleporting = True
+            self.teleport_cooldown = self.teleport_cooldown_time
+            direction = choice(['up', 'down', 'left', 'right'])
+            teleport_distance = 150
+            new_x = self.pos_x
+            new_y = self.pos_y
+            if direction == 'up':
+                new_y -= teleport_distance
+            elif direction == 'down':
+                new_y += teleport_distance
+            elif direction == 'left':
+                new_x -= teleport_distance
+            elif direction == 'right':
+                new_x += teleport_distance
+            screen_rect = SCREEN.get_rect()
+            new_x = max(screen_rect.left, min(new_x, screen_rect.right - self.rect.width))
+            new_y = max(screen_rect.top, min(new_y, screen_rect.bottom - self.rect.height))
+            self.pos_x = new_x
+            self.pos_y = new_y
+            self.rect.x = int(self.pos_x)
+            self.rect.y = int(self.pos_y)
+        if self.is_teleporting:
+            self.is_teleporting = False
 
 
 class Andrey(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 300, weapon)
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 1500, weapon)
+        self.rage_cooldown = 6000
+        self.rage_duration = 1800
+        self.rage_flag = False
 
     def move_logic(self, dx, dy):
         if dx > 30:
@@ -309,18 +284,78 @@ class Andrey(Enemy):
             if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
                     if dx > attack_range:
-                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False, self.player)
                     elif dx < -attack_range:
-                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False, self.player)
                 else:
                     if dy > attack_range:
-                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False, self.player)
                     elif dy < -attack_range:
-                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False)
+                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False, self.player)
                 self.weapon.reloads = True
                 self.attacked = True
         else:
             self.attacked = False
+
+    def rage(self):
+        self.x_speed *= 2
+        self.y_speed *= 2
+        self.acceleration *= 2
+        self.max_speed *= 2
+        self.friction *= 2
+        self.attacked *= 2
+        self.rage_flag = True
+        self.rage_duration = 3000
+        print(1)
+
+    def unrage(self):
+        self.x_speed /= 2
+        self.y_speed /= 2
+        self.acceleration /= 2
+        self.max_speed /= 2
+        self.friction /= 2
+        self.attacked /= 2
+        self.rage_flag = False
+        self.rage_cooldown = 6000
+        print(2)
+
+
+class PigMan(Enemy):
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, pig_man, 0.1, 0.001, 0.8, 3000, weapon)
+
+    def move_logic(self, dx, dy):
+        if dx > 30:
+            self.x_speed += self.acceleration
+        if dx < -30:
+            self.x_speed -= self.acceleration
+        if dy > 30:
+            self.y_speed += self.acceleration
+        if dy < -30:
+            self.y_speed -= self.acceleration
+
+        attack_range = 50
+
+        if not hasattr(self, 'attacked'):
+            self.attacked = False
+
+        if abs(dx) > attack_range or abs(dy) > attack_range:
+            if not self.attacked and not self.weapon.reloads:
+                if abs(dx) > abs(dy):
+                    if dx > attack_range:
+                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False, self.player)
+                    elif dx < -attack_range:
+                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False, self.player)
+                else:
+                    if dy > attack_range:
+                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False, self.player)
+                    elif dy < -attack_range:
+                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False, self.player)
+                self.weapon.reloads = True
+                self.attacked = True
+        else:
+            self.attacked = False
+
 
 
 from expansion import FPS, SCREEN, load_image
