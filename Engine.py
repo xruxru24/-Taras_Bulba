@@ -67,7 +67,6 @@ class Engine:
                         damage += weapon.damage
                         hits += 1
         else:
-            print(weapon.bow_x, weapon.bow_y, player.get_position())
             if weapon.rect.colliderect(player.rect):
                 player.weapon.kill()
                 player.kill()

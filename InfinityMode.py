@@ -108,9 +108,9 @@ def infinity_game():
 
         keys = pygame.key.get_pressed()
         player.run(keys, mb_down)
+        Units.arrow_group.update()
         Units.player_group.update()
         Units.all_sprites.update()
-        Units.arrow_group.update()
 
         Units.weapon_group.update()
         field_sprite.draw(SCREEN)

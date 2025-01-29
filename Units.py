@@ -206,7 +206,6 @@ class Archer(Enemy):
             self.pos_y = screen_rect.bottom - self.rect.height
 
         attack_range = 300
-
         from Weapons import Arrow
 
         if not hasattr(self, 'attacked'):
@@ -216,7 +215,7 @@ class Archer(Enemy):
             if not self.attacked and not self.weapon.reloads:
                 b_x, b_y = int(self.pos_x), int(self.pos_y)
                 p_x, p_y = self.player.get_position()
-                Arrow(b_x, b_y, p_x, p_y)
+                Arrow(b_x, b_y, p_x , p_y)
                 self.weapon.reloads = True
                 self.attacked = True
         else:

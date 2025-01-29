@@ -81,5 +81,6 @@ class Arrow(pygame.sprite.Sprite):
 
             from Engine import eng
 
+            self.rect.clamp_ip(expansion.SCREEN.get_rect())
             self.rect.move_ip(int(self.bow_x), int(self.bow_y))
             eng.damage_collides(self, None, None, None, True, False)

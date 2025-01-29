@@ -3,7 +3,6 @@ import time
 import pygame, os, sys
 from random import randint, choice
 
-from click import clear
 
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
@@ -33,7 +32,7 @@ def load_image(name, colorkey=None):
 
 def switching_waves(cur_wave, creepe):
 
-    from Units import creepe_group, SwordMan, Archer
+    from Units import creepe_group, SwordMan, Archer, arrow_group
     from Weapons import Saber, CavalrySword, Dagger, Bow
     from InfinityMode import player
 
@@ -52,6 +51,7 @@ def switching_waves(cur_wave, creepe):
             creepe_group.add(Arc)
     creepe_group.draw(SCREEN)
     creepe_group.update()
+    arrow_group.update()
     pygame.display.flip()
 
 def clear_groups(company):
