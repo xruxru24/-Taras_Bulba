@@ -225,6 +225,9 @@ class Archer(Enemy):
 class General(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
         super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 300, weapon)
+        self.rage_cooldown = 500
+        self.rage_duration = 180
+        self.rage_flag = False
 
     def move_logic(self, dx, dy):
         if dx > 30:
@@ -236,31 +239,41 @@ class General(Enemy):
         if dy < -30:
             self.y_speed -= self.acceleration
 
-        attack_range = 25
+        self.attack_range = 25
 
         if not hasattr(self, 'attacked'):
             self.attacked = False
 
-        if abs(dx) > attack_range or abs(dy) > attack_range:
+        if abs(dx) > self.attack_range or abs(dy) > self.attack_range:
             if not self.attacked and not self.weapon.reloads:
                 if abs(dx) > abs(dy):
-                    if dx > attack_range:
+                    if dx > self.attack_range:
                         if eng.damage_collides(self.weapon, 'right', self, player_group, False, True):
                             self.teleport()
-                    elif dx < -attack_range:
+                    elif dx < -self.attack_range:
                         if eng.damage_collides(self.weapon, 'left', self, player_group, False, True):
                             self.teleport()
                 else:
-                    if dy > attack_range:
+                    if dy > self.attack_range:
                         if eng.damage_collides(self.weapon, 'down', self, player_group, False, True):
                             self.teleport()
-                    elif dy < -attack_range:
+                    elif dy < -self.attack_range:
                         if eng.damage_collides(self.weapon, 'up', self, player_group, False, True):
                             self.teleport()
                 self.weapon.reloads = True
                 self.attacked = True
         else:
             self.attacked = False
+
+    def rage(self):
+        if self.rage_cooldown == 0:
+            self.x_speed *= 1.5
+            self.y_speed *= 1.5
+            self.acceleration *= 1.5
+            self.max_speed *= 1.5
+            self.friction *= 1.5
+            self.attacked *= 1.5
+            self.rage_flag = True
 
     def teleport(self):
 
@@ -277,6 +290,43 @@ class General(Enemy):
             self.rect.y -= teleport_distance
         elif direction == 'down':
             self.rect.y += teleport_distance
+
+
+class Andrey(Enemy):
+    def __init__(self, pos_x, pos_y, weapon):
+        super().__init__(pos_x, pos_y, pig_man, 0.4, 0.001, 0.8, 300, weapon)
+
+    def move_logic(self, dx, dy):
+        if dx > 30:
+            self.x_speed += self.acceleration
+        if dx < -30:
+            self.x_speed -= self.acceleration
+        if dy > 30:
+            self.y_speed += self.acceleration
+        if dy < -30:
+            self.y_speed -= self.acceleration
+
+        attack_range = 50
+
+        if not hasattr(self, 'attacked'):
+            self.attacked = False
+
+        if abs(dx) > attack_range or abs(dy) > attack_range:
+            if not self.attacked and not self.weapon.reloads:
+                if abs(dx) > abs(dy):
+                    if dx > attack_range:
+                        eng.damage_collides(self.weapon, 'right', self, player_group, False, False)
+                    elif dx < -attack_range:
+                        eng.damage_collides(self.weapon, 'left', self, player_group, False, False)
+                else:
+                    if dy > attack_range:
+                        eng.damage_collides(self.weapon, 'down', self, player_group, False, False)
+                    elif dy < -attack_range:
+                        eng.damage_collides(self.weapon, 'up', self, player_group, False, False)
+                self.weapon.reloads = True
+                self.attacked = True
+        else:
+            self.attacked = False
 
 
 from expansion import FPS, SCREEN, load_image
