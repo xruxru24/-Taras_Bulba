@@ -1,5 +1,3 @@
-import time
-
 import pygame
 import csv
 import pygame.font
@@ -17,9 +15,6 @@ slashes_images = [pygame.transform.scale(expansion.load_image('slash_down.png'),
 
 
 class Engine:
-    def __init__(self):
-        pass
-
     def music(self, songs):
         for i in songs:
             pygame.mixer.music.load(i)
@@ -102,7 +97,6 @@ def statictics(param=None):
                    'Damage': (650, 580)}
     data_files = {None: 'stats.csv',
                   'end_game': 'stats_one_game.csv'}
-    data_clear = {None: False, 'end_game': True}
     run = True
     while run:
         for event in pygame.event.get():
@@ -131,5 +125,3 @@ def clear_stats(params):
         for row in range(len(params)):
             params[row][-1] = '0'
         writer.writerows(params)
-
-
