@@ -71,7 +71,10 @@ class Engine:
                 player.weapon.kill()
                 player.kill()
                 deaths += 1
-            weapon.kill()
+                weapon.kill()
+                statictics('end_game')
+            if weapon.rect.x >= 1910 or weapon.rect.y >= 1070 or weapon.rect.x <= 0 or weapon.rect.y <= 0:
+                weapon.kill()
 
 
 

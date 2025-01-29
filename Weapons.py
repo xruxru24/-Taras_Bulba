@@ -65,22 +65,14 @@ class Arrow(pygame.sprite.Sprite):
 
 
     def update(self):
-
-        if self.bow_x + self.x_speed > expansion.WIDTH or self.bow_y + self.y_speed > expansion.HEIGHT:
-            self.kill()
-
-        else:
             if self.bow_x < self.player_x:
-                self.bow_x += self.x_speed
+                self.rect = self.rect.move(self.x_speed, 0)
             else:
-                self.bow_x -= self.x_speed
+                self.rect = self.rect.move(-self.x_speed, 0)
             if self.bow_y < self.player_y:
-                self.bow_y += self.y_speed
+                self.rect = self.rect.move(0, self.y_speed)
             else:
-                self.bow_y -= self.y_speed
+                self.rect = self.rect.move(0, -self.y_speed)
 
             from Engine import eng
-
-            self.rect.clamp_ip(expansion.SCREEN.get_rect())
-            self.rect.move_ip(int(self.bow_x), int(self.bow_y))
             eng.damage_collides(self, None, None, None, True, False)

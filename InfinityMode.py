@@ -1,7 +1,8 @@
 import pygame, os, sys
 
 import expansion
-from Weapons import Dagger, Saber, CavalrySword
+from Units import arrow_group
+from Weapons import Dagger, Saber, CavalrySword, Arrow
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
 import Units
@@ -84,10 +85,6 @@ def infinity_game():
                     i.cooldown = i.reload * 600
                 i.cooldown -= 1
 
-        Units.arrow_group.draw(SCREEN)
-        Units.arrow_group.update()
-
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -108,12 +105,14 @@ def infinity_game():
 
         keys = pygame.key.get_pressed()
         player.run(keys, mb_down)
-        Units.arrow_group.update()
+
         Units.player_group.update()
         Units.all_sprites.update()
-
         Units.weapon_group.update()
         field_sprite.draw(SCREEN)
+
+        Units.arrow_group.draw(SCREEN)
+        Units.arrow_group.update()
 
         sale_point_sprite.draw(SCREEN)
         Units.player_group.draw(SCREEN)
