@@ -20,6 +20,9 @@ class Weapon(pygame.sprite.Sprite):
         self.koeff_x, self.koeff_y = koeff_x, koeff_y
 
     def move(self, player_x, player_y):
+        '''
+        Передвижение оружия за игроком
+        '''
         self.rect.move_ip(player_x - self.rect.x - self.koeff_x, player_y - self.rect.y - self.koeff_y)
 
 

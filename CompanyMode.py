@@ -7,13 +7,19 @@ from expansion import load_image
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 40)
 
+
+
 image_1 = load_image("company_mode_menu.png")
 
 
 def company_game_menu():
+    '''
+    Метод реализует кнопки запуска боссов в сюжетном режиме
+    '''
 
     from main_menu import start_menu
 
+    # словарь реализиции кнопок
     click_data = {(range(140, 610), range(145, 900)): 'Свиноподобный',
         (range(720, 1200), range(145, 900)): 'Войцех',
         (range(1290, 1745), range(145, 900)): 'Андрий',
@@ -37,6 +43,9 @@ def company_game_menu():
 
 def company_game(boss):
     from Units import General
+    '''
+    Метод реализует работу компаний сюжетного режима
+    '''
     clear_groups(True)
 
     boss_locations = {'Свиноподобный': 'company_mode_1st_boss.png',

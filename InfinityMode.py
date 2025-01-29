@@ -17,9 +17,15 @@ class SaleSpot:
 
 
     def update(self):
+        '''
+        Отрисовка лавки с оружием
+        '''
         SCREEN.blit(load_image('sale_spot.png'), (550, 400))
 
     def buy(self, x, y):
+        '''
+        Логика покупок
+        '''
         click_data = {(range(500, 722), range(575, 767)): CavalrySword,
             (range(723, 996), range(575, 767)): Dagger,
             (range(1000, 1200), range(575, 767)): Saber}
@@ -42,6 +48,9 @@ class SaleSpot:
 
 def infinity_game():
     global player
+    '''
+    Метод реализации бесконечного режима
+    '''
     run = True
     expansion.clear_groups(False)
     player = Units.Player(50, 50, Weapons.Saber())

@@ -3,11 +3,15 @@ import sys
 from expansion import load_image, SCREEN, CLOCK
 from CompanyMode import company_game_menu
 
+# подгрузка спрайтов
 image = load_image("startmenu.png")
 image_1 = load_image("company_mode_menu.png")
 
 
 def exit_game():
+    '''
+    Метод реализует выход из игры
+    '''
     sys.exit()
 
 
@@ -20,7 +24,8 @@ def start_menu():
     from Engine import eng, statictics
 
     run = True
-    c = 0
+
+    # словарь для реализации кнопок стартового меню
     click_data = {(range(15, 435), range(345, 480)): (
         infinity_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
         (range(1650, 1920), range(895, 1025)): (exit_game, eng.music(('song_1.mp3', 'song_2.mp3'))),
