@@ -52,26 +52,26 @@ class Engine:
                         unit.weapon.kill()
                         unit.kill()
                         if isinstance(unit, Player):
-                            deaths += 1
                             unit.weapon.kill()
                             unit.kill()
+                            deaths += 1
                             statictics('end_game')
                         else:
-                            kills += 1
-                            hits += 1
-                            damage += unit.hp
+                            if isinstance(unit, Player):
+                                kills += 1
+                                hits += 1
+                                damage += unit.hp
                     else:
                         unit.hp -= weapon.damage
-                        damage += weapon.damage
-                        hits += 1
+                        if not isinstance(unit, Player):
+                            damage += weapon.damage
+                            hits += 1
         else:
             if weapon.rect.colliderect(player.rect):
                 player.weapon.kill()
                 player.kill()
                 deaths += 1
             weapon.kill()
-
-
 
         self.update_stats('all_time', damage, deaths, hits, kills)
         self.update_stats('one_game', damage, deaths, hits, kills)
@@ -102,6 +102,7 @@ def statictics(param=None):
                    'Damage': (650, 580)}
     data_files = {None: 'stats.csv',
                   'end_game': 'stats_one_game.csv'}
+    data_clear = {None: False, 'end_game': True}
     run = True
     while run:
         for event in pygame.event.get():
@@ -120,11 +121,15 @@ def statictics(param=None):
                 num = font.render(str(stat[1]), False, '#880015')
                 expansion.SCREEN.blit(num, (data_coords[stat[0]]))
         pygame.display.flip()
-        if param is not None:
-            with open(data_files[param], mode='wt') as file:
-                writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-                for row in range(len(data)):
-                    data[row][1] = '0'
-                writer.writerows(data)
+        if not data_clear[param]:
+            clear_stats(data)
+
+
+def clear_stats(params):
+    with open('stats_one_game.csv', mode='wt') as file:
+        writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+        for row in range(len(params)):
+            params[row][1] = '0'
+        writer.writerows(params)
 
 
