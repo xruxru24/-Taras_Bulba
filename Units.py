@@ -63,15 +63,30 @@ class Player(pygame.sprite.Sprite):
             self.is_dashing = True
             self.dash_cooldown = self.dash_cooldown_time
             if self.x_speed > 0:
-                self.pos_x += self.dash_distance
+                if self.pos_x + self.dash_distance >= 1750:
+                    self.pos_x = 1750
+                else:
+                    self.pos_x += self.dash_distance
             elif self.x_speed < 0:
-                self.pos_x -= self.dash_distance
+                if self.pos_x - self.dash_distance <= 0:
+                    self.pos_x = 40
+                else:
+                    self.pos_x -= self.dash_distance
             elif self.y_speed > 0:
-                self.pos_y += self.dash_distance
+                if self.pos_y + self.dash_distance >= 900:
+                    self.pos_y = 900
+                else:
+                    self.pos_y += self.dash_distance
             elif self.y_speed < 0:
-                self.pos_y -= self.dash_distance
+                if self.pos_y - self.dash_distance <= 0:
+                    self.pos_y = 40
+                else:
+                    self.pos_y -= self.dash_distance
             else:
-                self.pos_x += self.dash_distance
+                if self.pos_x - self.dash_distance <= 0:
+                    self.pos_x = 30
+                else:
+                    self.pos_x -= self.dash_distance
 
         if self.dash_cooldown > 0:
             self.dash_cooldown -= 1 / FPS

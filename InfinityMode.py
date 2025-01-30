@@ -121,13 +121,13 @@ def infinity_game():
         Units.weapon_group.update()
         field_sprite.draw(SCREEN)
 
-        Units.arrow_group.draw(SCREEN)
-        Units.arrow_group.update()
-
         sale_point_sprite.draw(SCREEN)
         Units.player_group.draw(SCREEN)
         Units.creepe_group.draw(SCREEN)
         Units.weapon_group.draw(SCREEN)
+
+        Units.arrow_group.update()
+        Units.arrow_group.draw(SCREEN)
 
         if len(Units.creepe_group) == 0:
             SCREEN.blit(wave_image, (760, 200))

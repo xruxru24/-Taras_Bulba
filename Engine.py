@@ -37,7 +37,15 @@ class Engine:
         # параметры статистики(урон, убийства, попадания, смерти)
         damage, kills, hits, deaths = 0, 0, 0, 0
 
-        if not arrow_or_not:
+        if arrow_or_not:
+            if weapon.rect.colliderect(player.rect):
+                player.weapon.kill()
+                player.kill()
+                deaths += 1
+                statictics('end_game')
+            if weapon.rect.x >= 1910 or weapon.rect.y >= 1070 or weapon.rect.x <= 0 or weapon.rect.y <= 0:
+                weapon.kill()
+        else:
             data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
                                'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
                                'left': (-weapon.attack_distance, -(weapon.attack_distance // 4), slashes_images[3]),
@@ -81,14 +89,6 @@ class Engine:
                         if not isinstance(unit, Player):
                             damage += weapon.damage
                             hits += 1
-        else:
-            if weapon.rect.colliderect(player.rect):
-                player.weapon.kill()
-                player.kill()
-                deaths += 1
-                statictics('end_game')
-            if weapon.rect.x >= 1910 or weapon.rect.y >= 1070 or weapon.rect.x <= 0 or weapon.rect.y <= 0:
-                weapon.kill()
 
         # вызов обновления статистики
         self.update_stats('all_time', damage, deaths, hits, kills)
@@ -165,7 +165,10 @@ def statictics(param=None):
             with open(data_files[param], mode='wt') as file:
                 writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
                 for row in range(len(data)):
-                    data[row][1] = '0'
+                    if data[row][0] == "Deaths":
+                        data[row][1] = '1'
+                    else:
+                        data[row][1] = '0'
                 writer.writerows(data)
 
 
@@ -176,5 +179,8 @@ def clear_stats(params):
     with open('stats_one_game.csv', mode='wt') as file:
         writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
         for row in range(len(params)):
-            params[row][-1] = '0'
+            if params[row][0] == "Deaths":
+                params[row][-1] = '1'
+            else:
+                params[row][-1] = '0'
         writer.writerows(params)
