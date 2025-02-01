@@ -106,6 +106,7 @@ class Player(pygame.sprite.Sprite):
         return self.rect.centerx, self.rect.centery
 
 
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, image, speed, acceleration, friction, hp, weapon):
         super().__init__(creepe_group, all_sprites)
@@ -247,8 +248,6 @@ class General(Enemy):
         self.teleport_cooldown_time = 3
         self.is_teleporting = False
 
-    from expansion import FPS, SCREEN
-
     def update(self):
         super().update()
         if self.teleport_cooldown > 0:
@@ -346,7 +345,7 @@ class Andrey(Enemy):
 
 class PigMan(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
-        super().__init__(pos_x, pos_y, pig_man, 0.1, 0.001, 0.8, 3000, weapon)
+        super().__init__(pos_x, pos_y, pig_man, 1, 0.001, 0.8, 3000, weapon)
 
     def move_logic(self, dx, dy):
         if dx > 30:
@@ -358,7 +357,7 @@ class PigMan(Enemy):
         if dy < -30:
             self.y_speed -= self.acceleration
 
-        attack_range = 50
+        attack_range = 250
 
         if not hasattr(self, 'attacked'):
             self.attacked = False
@@ -384,8 +383,8 @@ class PigMan(Enemy):
 from expansion import FPS, SCREEN, load_image
 
 player_image = load_image('taras.png', -1)
-sword_man = load_image('swordsman.png')
-archer = load_image('Archer.png')
+sword_man = pygame.transform.scale(load_image('swordsman.png'), (112, 154))
+archer = pygame.transform.scale(load_image('Archer.png'), (109, 151))
 gener = pygame.transform.scale(load_image('General.png'), (160, 305))
 andr = load_image('Andrey.png')
 pig_man = pygame.transform.scale(load_image('pigman.png', -1), (200, 200))

@@ -4,11 +4,7 @@ from random import randint, choice
 SIZE = WIDTH, HEIGHT = 1920, 1080
 SCREEN = pygame.display.set_mode(SIZE)
 CLOCK = pygame.time.Clock()
-FPS = 60
-wave = 1
-
-pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 40)
+FPS = 500
 
 
 def load_image(name, colorkey=None):
@@ -29,9 +25,9 @@ def load_image(name, colorkey=None):
 
 def switching_waves(cur_wave, creepe, player):
     '''
-    Метод для переключения волн в бесконечном режиме и спавна соотвествующего кол-ва крипов на карте.
+    Функция для переключения волн в бесконечном режиме и спавна соотвествующего кол-ва крипов на карте.
     '''
-    from Units import creepe_group, SwordMan, Archer, arrow_group
+    from Units import creepe_group, SwordMan, Archer
     from Weapons import Saber, CavalrySword, Dagger, Bow
 
     # подсчет крипов
@@ -41,19 +37,24 @@ def switching_waves(cur_wave, creepe, player):
         # логика создания крипов
         ch = randint(0, 1)
         if not ch:
-            Sw_man = SwordMan(randint(100, WIDTH - 100), randint(100, HEIGHT - 100),
-                              choice([Dagger, Saber, CavalrySword])())
-            Sw_man.set_player(player)
-            creepe_group.add(Sw_man)
+            weap = choice([Dagger, Saber, CavalrySword])
+
+            if weap is Dagger:
+                koeff_x, koeff_y = -75, -50
+            elif weap is Saber:
+                koeff_x, koeff_y = -50, 10
+            else:
+                koeff_x, koeff_y = -75, 10
+
+            sw_man = SwordMan(randint(100, WIDTH - 100), randint(100, HEIGHT - 100), weap(koeff_y, koeff_x))
+            sw_man.set_player(player)
+            creepe_group.add(sw_man)
         else:
-            Arc = Archer(randint(100, WIDTH - 100), randint(100, HEIGHT - 100), Bow())
-            Arc.set_player(player)
-            creepe_group.add(Arc)
-    player.hp += 25
-    creepe_group.draw(SCREEN)
-    creepe_group.update()
-    arrow_group.update()
-    pygame.display.flip()
+            arc = Archer(randint(100, WIDTH - 100), randint(100, HEIGHT - 100), Bow(-25, -40))
+            arc.set_player(player)
+            creepe_group.add(arc)
+    if cur_wave != 1:
+        player.hp += 25
 
 
 def clear_groups(company):
@@ -73,7 +74,4 @@ def clear_groups(company):
 
     if company:
         for i in player_group:
-            i.kill()
-
-        for i in weapon_group:
             i.kill()

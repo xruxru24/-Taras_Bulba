@@ -1,12 +1,10 @@
-from random import randint
 import pygame
 import csv
 import pygame.font
+import expansion
 
 pygame.mixer.init()
 pygame.font.init()
-
-import expansion
 
 # подгрузка спрайтов
 image1 = expansion.load_image("stats.png")
@@ -42,9 +40,14 @@ class Engine:
                 player.weapon.kill()
                 player.kill()
                 deaths += 1
+
+                self.update_stats('all_time', damage, deaths, hits, kills)
+                self.update_stats('one_game', damage, deaths, hits, kills)
+
                 statictics('end_game')
             if weapon.rect.x >= 1910 or weapon.rect.y >= 1070 or weapon.rect.x <= 0 or weapon.rect.y <= 0:
                 weapon.kill()
+            return
         else:
             data_player_dir = {'up': (-(weapon.attack_distance // 4), -weapon.attack_distance, slashes_images[1]),
                                'down': (-(weapon.attack_distance // 4), 116, slashes_images[0]),
@@ -74,6 +77,8 @@ class Engine:
                             unit.weapon.kill()
                             unit.kill()
                             deaths += 1
+                            self.update_stats('all_time', damage, deaths, hits, kills)
+                            self.update_stats('one_game', damage, deaths, hits, kills)
                             statictics('end_game')
                         else:
                             kills += 1
@@ -90,9 +95,6 @@ class Engine:
                             damage += weapon.damage
                             hits += 1
 
-        # вызов обновления статистики
-        self.update_stats('all_time', damage, deaths, hits, kills)
-        self.update_stats('one_game', damage, deaths, hits, kills)
 
     def update_stats(self, param, damage, deaths, hits, kills):
         '''
@@ -126,7 +128,7 @@ eng = Engine()
 
 def statictics(param=None):
     '''
-    Метод реализует и общую статистику(статистику за все время), и финальное меню(статистику одного боя),
+    Функция реализует и общую статистику(статистику за все время), и финальное меню(статистику одного боя),
     поэтому принимает параметр по которому определяет какую статистику нужно вывести на экран.
     '''
     # словарь для определения координат, где нужно вывести соотвествующие ключам параметры статистики.

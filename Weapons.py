@@ -26,33 +26,33 @@ class Weapon(pygame.sprite.Sprite):
 
 
 class CavalrySword(Weapon):
-    def __init__(self):
+    def __init__(self, koeff_y, koeff_x):
         self.image = pygame.transform.scale(load_image('CavalrySword.png'), (100, 100))
-        super().__init__(self.image, -5, 50, 25, 60, 1)
+        super().__init__(self.image, koeff_x, koeff_y, 25, 60, 1)
 
 
 class Saber(Weapon):
-    def __init__(self):
+    def __init__(self, koeff_y, koeff_x):
         self.image = pygame.transform.scale(load_image('Saber.png'), (150, 150))
-        super().__init__(self.image, 10, 75, 40, 60, 1.3)
+        super().__init__(self.image, koeff_x, koeff_y, 40, 60, 1.3)
 
 
 class Dagger(Weapon):
-    def __init__(self):
+    def __init__(self, koeff_y, koeff_x):
         self.image = pygame.transform.scale(load_image('Dagger.png'), (50, 50))
-        super().__init__(self.image, -10, 10, 20, 30, 0.5)
+        super().__init__(self.image, koeff_x, koeff_y, 20, 30, 0.5)
 
 
 class Axe(Weapon):
-    def __init__(self):
-        self.image = pygame.transform.scale(load_image('Axe.png'), (50, 50))
-        super().__init__(self.image, -10, 10, 40, 100, 8)
+    def __init__(self, koeff_y, koeff_x):
+        self.image = pygame.transform.scale(load_image('Axe.png'), (150, 150))
+        super().__init__(self.image, koeff_x, koeff_y, 40, 300, 8)
 
 
 class Bow(Weapon):
-    def __init__(self):
+    def __init__(self, koeff_y, koeff_x):
         self.image = pygame.transform.scale(load_image('Bow.png'), (125, 125))
-        super().__init__(self.image, 25, 40, 0, 0, 4)
+        super().__init__(self.image, koeff_x, koeff_y, 0, 0, 4)
 
 
 class Arrow(pygame.sprite.Sprite):

@@ -1,6 +1,6 @@
 import pygame, sys
 
-import expansion
+from Units import player_group
 from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
@@ -12,7 +12,7 @@ font = pygame.font.SysFont('Comic Sans MS', 40)
 
 class SaleSpot:
     def __init__(self):
-        self.items = {Dagger: 15, Saber: 30, CavalrySword: 45}
+        self.items = {Dagger: 15, Saber: 45, CavalrySword: 30}
         self.flag = False
 
     def update(self):
@@ -33,7 +33,8 @@ class SaleSpot:
 
         for i in click_data.keys():
             if x in i[0] and y in i[1]:
-                if player.money <= self.items[click_data[i]]:
+                print(player.money, self.items[click_data[i]])
+                if player.money < self.items[click_data[i]]:
                     n = font.render('Недостаточно средств!', False, 'black')
                     while s != 0:
                         SCREEN.blit(n, (675, 400))
@@ -41,18 +42,27 @@ class SaleSpot:
                         s -= 1
                 else:
                     player.weapon.kill()
-                    player.weapon = click_data[i]()
+                    if click_data[i] is Dagger:
+                        koeff_x, koeff_y = -10, 10
+                    elif click_data[i] is Saber:
+                        koeff_x, koeff_y = 75, 10
+                    else:
+                        koeff_x, koeff_y = 0, 40
+                    player.weapon = click_data[i](koeff_y, koeff_x)
                     player.money -= self.items[click_data[i]]
 
 
 def infinity_game():
     global player
     '''
-    Метод реализации бесконечного режима
+    Функция реализации бесконечного режима
     '''
+
+    from expansion import FPS, CLOCK, clear_groups
+
     run = True
-    expansion.clear_groups(False)
-    player = Units.Player(50, 50, Weapons.Saber())
+    clear_groups(False)
+    player = Units.Player(50, 50, Weapons.Saber(75, 10))
 
     field_sprite = pygame.sprite.Group()
     field = pygame.sprite.Sprite()
@@ -117,7 +127,7 @@ def infinity_game():
         player.run(keys, mb_down)
 
         Units.player_group.update()
-        Units.all_sprites.update()
+        Units.creepe_group.update()
         Units.weapon_group.update()
         field_sprite.draw(SCREEN)
 
@@ -160,4 +170,5 @@ def infinity_game():
             cooldown = font.render('Can not do it now!', False, 'Black')
             SCREEN.blit(cooldown, (1600, 900))
 
+        CLOCK.tick(FPS)
         pygame.display.flip()

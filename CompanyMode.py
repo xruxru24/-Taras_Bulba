@@ -1,4 +1,5 @@
 import pygame, sys
+
 from expansion import SCREEN, clear_groups
 from Units import Player, weapon_group, player_group, all_sprites, arrow_group, creepe_group, Andrey, PigMan
 from Weapons import Saber, Axe
@@ -41,6 +42,7 @@ def company_game_menu():
 
 def company_game(boss):
     from Units import General
+    from expansion import FPS, CLOCK
     '''
     Метод реализует работу компаний сюжетного режима
     '''
@@ -59,12 +61,12 @@ def company_game(boss):
     field = pygame.sprite.Sprite()
     field.image = pygame.transform.scale(boss_location, (1920, 1080))
     field.rect = field.image.get_rect()
-    player = Player(50, 50, Saber())
+    player = Player(50, 50, Saber(75, 10))
     field_sprite.add(field)
     if boss == 'Свиноподобный':
-        gen_bos = boss_units[boss](1920, 1080, Axe())
+        gen_bos = boss_units[boss](1920, 1080, Axe(-10, -150))
     else:
-        gen_bos = boss_units[boss](1920, 1080, Saber())
+        gen_bos = boss_units[boss](1920, 1080, Saber(0, 10))
     gen_bos.set_player(player)
 
     run = True
@@ -140,5 +142,7 @@ def company_game(boss):
         if player.weapon.reloads:
             cooldown = font.render('Can not do it now!', False, 'Black')
             SCREEN.blit(cooldown, (1600, 900))
+
+        CLOCK.tick(FPS)
 
         pygame.display.flip()

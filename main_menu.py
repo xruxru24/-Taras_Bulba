@@ -10,7 +10,7 @@ image_1 = load_image("company_mode_menu.png")
 
 def exit_game():
     '''
-    Метод реализует выход из игры
+    Функция реализует выход из игры
     '''
     sys.exit()
 
@@ -22,6 +22,7 @@ def start_menu():
 
     from InfinityMode import infinity_game
     from Engine import eng, statictics
+    from expansion import FPS
 
     run = True
 
@@ -44,7 +45,7 @@ def start_menu():
         SCREEN.fill('black')
         SCREEN.blit(image, (0, 0))
         pygame.display.flip()
-        CLOCK.tick(10)
+        CLOCK.tick(FPS)
 
 
 start_menu()
