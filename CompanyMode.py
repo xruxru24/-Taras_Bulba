@@ -13,7 +13,7 @@ image_1 = load_image("company_mode_menu.png")
 
 def company_game_menu():
     '''
-    Метод реализует кнопки запуска боссов в сюжетном режиме
+    Функция реализует кнопки запуска боссов в сюжетном режиме
     '''
 
     from main_menu import start_menu

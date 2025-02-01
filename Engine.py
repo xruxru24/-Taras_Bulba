@@ -176,7 +176,7 @@ def statictics(param=None):
 
 def clear_stats(params):
     '''
-    Метод реализующий очистику статистики одного боя.
+    Функция реализующий очистику статистики одного боя.
     '''
     with open('stats_one_game.csv', mode='wt') as file:
         writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)

@@ -1,6 +1,5 @@
 import pygame, sys
 
-from Units import player_group
 from Weapons import Dagger, Saber, CavalrySword
 from expansion import load_image, SCREEN, switching_waves
 import Weapons
