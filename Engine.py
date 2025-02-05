@@ -83,12 +83,12 @@ class Engine:
                         else:
                             kills += 1
                             hits += 1
-                            damage += unit.hp
+                            damage += weapon.damage
                             player.money += 10
                             if not isinstance(unit, Player):
                                 kills += 1
                                 hits += 1
-                                damage += unit.hp
+                                damage += weapon.damage
                             self.update_stats('all_time', damage, deaths, hits, kills)
                             self.update_stats('one_game', damage, deaths, hits, kills)
                     else:
