@@ -183,7 +183,6 @@ class Archer(Enemy):
 
     def move_logic(self, dx, dy):
         screen_rect = SCREEN.get_rect()
-
         if abs(dx) > 300:
             if dx > 0:
                 self.x_speed += self.acceleration
@@ -193,7 +192,7 @@ class Archer(Enemy):
             if dx > 0:
                 self.x_speed -= self.acceleration
             if dx < 0:
-                self.x_speed += self.acceleration
+                self.x_speed += self.acceleratio
         if abs(dy) > 300:
             if dy > 0:
                 self.y_speed += self.acceleration
@@ -204,19 +203,18 @@ class Archer(Enemy):
                 self.y_speed -= self.acceleration
             if dy < 0:
                 self.y_speed += self.acceleration
+        self.pos_x = max(0, min(self.pos_x, screen_rect.width - self.rect.width))
+        self.pos_y = max(0, min(self.pos_y, screen_rect.height - self.rect.height))
 
-        if self.rect.left < screen_rect.left:
-            self.x_speed = abs(self.x_speed)
-            self.pos_x = screen_rect.left
-        elif self.rect.right > screen_rect.right:
-            self.x_speed = -abs(self.x_speed)
-            self.pos_x = screen_rect.right - self.rect.width
-        if self.rect.top < screen_rect.top:
-            self.y_speed = abs(self.y_speed)
-            self.pos_y = screen_rect.top
-        elif self.rect.bottom > screen_rect.bottom:
-            self.y_speed = -abs(self.y_speed)
-            self.pos_y = screen_rect.bottom - self.rect.height
+        attack_range = 300
+        from Weapons import Arrow
+
+        if abs(dx) > attack_range or abs(dy) > attack_range:
+            if not self.weapon.reloads:
+                b_x, b_y = int(self.pos_x), int(self.pos_y)
+                p_x, p_y = self.player.get_position()
+                Arrow(b_x, b_y, p_x, p_y, self.player)
+                self.weapon.reloads = True
 
         attack_range = 300
         from Weapons import Arrow
@@ -277,7 +275,7 @@ class Andrey(Enemy):
         self.rage_flag = False
 
     def move_logic(self, dx, dy):
-        if dx > 30:
+        if dx > 30 :
             self.x_speed += self.acceleration
         if dx < -30:
             self.x_speed -= self.acceleration
