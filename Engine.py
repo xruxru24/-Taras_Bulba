@@ -23,7 +23,7 @@ class Engine:
             pygame.mixer.music.load(i)
             pygame.mixer.music.queue(i)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0)
+        pygame.mixer.music.set_volume(100)
 
     def damage_collides(self, weapon, dir, who, creeps, arrow_or_not, miss, player):
         '''

@@ -65,8 +65,10 @@ def company_game(boss):
     field_sprite.add(field)
     if boss == 'Свиноподобный':
         gen_bos = boss_units[boss](1920, 1080, Axe(-10, -150))
+    elif boss == 'Войцех':
+        gen_bos = boss_units[boss](1920, 1080, Saber(-80, -100))
     else:
-        gen_bos = boss_units[boss](1920, 1080, Saber(0, 10))
+        gen_bos = boss_units[boss](1920, 1080, Saber(5, -20))
     gen_bos.set_player(player)
 
     run = True
