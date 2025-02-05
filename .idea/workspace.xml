@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="340ac8ba-2792-44dc-87b6-c1179b5aa256" name="Changes" comment="">
+    <list default="true" id="340ac8ba-2792-44dc-87b6-c1179b5aa256" name="Changes" comment="fix end screen at company mode and fix bag sale spot">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CompanyMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/CompanyMode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/InfinityMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/InfinityMode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Units.py" beforeDir="false" afterPath="$PROJECT_DIR$/Units.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/Analysis-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/EXE-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/PKG-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/PYZ-00.pyz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/PYZ-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/base_library.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/main_menu.pkg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/warn-main_menu.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main_menu/xref-main_menu.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/stats.csv" beforeDir="false" afterPath="$PROJECT_DIR$/stats.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stats_one_game.csv" beforeDir="false" afterPath="$PROJECT_DIR$/stats_one_game.csv" afterDir="false" />
     </list>
@@ -24,6 +32,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -122,7 +131,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738402986384</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix end screen at company mode and fix bag sale spot">
+      <option name="closed" value="true" />
+      <created>1738779363829</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1738779363829</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,6 +157,7 @@
     <MESSAGE value="fix stat and dash" />
     <MESSAGE value="fix arrows, fix models" />
     <MESSAGE value="add requirements.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="fix end screen at company mode and fix bag sale spot" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix end screen at company mode and fix bag sale spot" />
   </component>
 </project>

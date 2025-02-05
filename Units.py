@@ -192,7 +192,7 @@ class Archer(Enemy):
             if dx > 0:
                 self.x_speed -= self.acceleration
             if dx < 0:
-                self.x_speed += self.acceleratio
+                self.x_speed += self.acceleration
         if abs(dy) > 300:
             if dy > 0:
                 self.y_speed += self.acceleration
