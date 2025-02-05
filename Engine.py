@@ -89,6 +89,8 @@ class Engine:
                                 kills += 1
                                 hits += 1
                                 damage += unit.hp
+                            self.update_stats('all_time', damage, deaths, hits, kills)
+                            self.update_stats('one_game', damage, deaths, hits, kills)
                     else:
                         unit.hp -= weapon.damage
                         if not isinstance(unit, Player):
@@ -166,11 +168,6 @@ def statictics(param=None):
         if param is not None:
             with open(data_files[param], mode='wt') as file:
                 writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-                for row in range(len(data)):
-                    if data[row][0] == "Deaths":
-                        data[row][1] = '1'
-                    else:
-                        data[row][1] = '0'
                 writer.writerows(data)
 
 
@@ -181,8 +178,5 @@ def clear_stats(params):
     with open('stats_one_game.csv', mode='wt') as file:
         writer = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
         for row in range(len(params)):
-            if params[row][0] == "Deaths":
-                params[row][-1] = '1'
-            else:
-                params[row][-1] = '0'
+            params[row][-1] = '0'
         writer.writerows(params)
