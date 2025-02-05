@@ -32,7 +32,6 @@ class SaleSpot:
 
         for i in click_data.keys():
             if x in i[0] and y in i[1]:
-                print(player.money, self.items[click_data[i]])
                 if player.money < self.items[click_data[i]]:
                     n = font.render('Недостаточно средств!', False, 'black')
                     while s != 0:
@@ -44,7 +43,7 @@ class SaleSpot:
                     if click_data[i] is Dagger:
                         koeff_x, koeff_y = -10, 10
                     elif click_data[i] is Saber:
-                        koeff_x, koeff_y = 75, 10
+                        koeff_x, koeff_y = 10, 75
                     else:
                         koeff_x, koeff_y = 0, 40
                     player.weapon = click_data[i](koeff_y, koeff_x)

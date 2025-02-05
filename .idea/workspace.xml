@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="340ac8ba-2792-44dc-87b6-c1179b5aa256" name="Changes" comment="add requirements.txt">
+    <list default="true" id="340ac8ba-2792-44dc-87b6-c1179b5aa256" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CompanyMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/CompanyMode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/InfinityMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/InfinityMode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Units.py" beforeDir="false" afterPath="$PROJECT_DIR$/Units.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stats.csv" beforeDir="false" afterPath="$PROJECT_DIR$/stats.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stats_one_game.csv" beforeDir="false" afterPath="$PROJECT_DIR$/stats_one_game.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +18,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="1ba40af4ca68f6e0e57d19aafb35a2599df34837" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -135,6 +140,6 @@
     <MESSAGE value="fix stat and dash" />
     <MESSAGE value="fix arrows, fix models" />
     <MESSAGE value="add requirements.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="add requirements.txt" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

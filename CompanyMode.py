@@ -1,5 +1,6 @@
 import pygame, sys
 
+from Engine import statictics
 from expansion import SCREEN, clear_groups
 from Units import Player, weapon_group, player_group, all_sprites, arrow_group, creepe_group, Andrey, PigMan
 from Weapons import Saber, Axe
@@ -73,6 +74,8 @@ def company_game(boss):
 
     run = True
     while run:
+        if len(creepe_group) == 0:
+            statictics('end_game')
         mb_down = False
         if player.weapon.reloads:
             if player.weapon.cooldown - 1 == 0:
