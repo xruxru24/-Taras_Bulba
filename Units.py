@@ -161,7 +161,7 @@ class Enemy(pygame.sprite.Sprite):
         if dy < -30:
             self.y_speed -= self.acceleration
 
-        attack_range = 25
+        attack_range = self.weapon.attack_distance
 
         if not hasattr(self, 'attacked'):
             self.attacked = False
