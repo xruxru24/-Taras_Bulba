@@ -245,7 +245,7 @@ class General(Enemy):
     def __init__(self, pos_x, pos_y, weapon):
         super().__init__(pos_x, pos_y, gener, 0.4, 0.001, 0.8, 400, weapon)
         self.teleport_cooldown = 0
-        self.teleport_cooldown_time = 3
+        self.teleport_cooldown_time = 0.5
         self.is_teleporting = False
 
     def update(self):
